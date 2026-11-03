@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Rendra's Mind</title>
+    <link rel="icon" href="data:," />
+    <!-- Nothing shows until the site is built (main.ts adds .is-ready): before
+         that the page is raw HTML, its pictures unstyled. -->
+    <style>
+      html { background: #efefec; }
+      html:not(.is-ready) body { visibility: hidden; }
+    </style>
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="pages">
+        <main class="home page" id="home">
+          <h1 class="sr-only">Rendra's Mind</h1>
+
+          <header class="site">
+            <!-- The logo: letters on a 3D drum, filled in by home.ts -->
+            <p class="drum" aria-label="Rendra"></p>
+          </header>
+
+          <!-- One card per section, each showing it live — filled in by home.ts from home/content.ts -->
+          <div class="stack"></div>
+        </main>
+
+        <!-- DRAFT — the previous "About me" (the five of me). Kept, but out of the
+             site: no card, no navigation. View it at /?preview=hero -->
+        <section class="hero page page--draft" id="hero" aria-labelledby="hero-title">
+          <h2 class="sr-only" id="hero-title">The five of me</h2>
+
+          <div class="stage" id="stage">
+            <!-- Layers, back to front -->
+            <img class="layer layer--base" src="/src/assets/scene/everyone.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" draggable="false" />
+
+            <!-- Sit exactly on top of the base photo (same source pixels) with a light,
+                 always-on breathing loop — see scene.ts. Below the dim/hover layers, so
+                 hovering one person still dims the others, breathing included. -->
+            <img class="layer layer--idle" data-person="1" src="/src/assets/scene/p1-idle.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="2" src="/src/assets/scene/p2-idle.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="3" src="/src/assets/scene/p3-idle.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="4" src="/src/assets/scene/p4-idle.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="5" src="/src/assets/scene/p5-idle.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+
+            <img class="layer layer--dim" src="/src/assets/scene/everyone-dim.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="1" src="/src/assets/scene/p1.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="2" src="/src/assets/scene/p2.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="3" src="/src/assets/scene/p3.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="4" src="/src/assets/scene/p4.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="5" src="/src/assets/scene/p5.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+
+            <!-- Role labels (visual only: the hotspot buttons carry the accessible name) -->
+            <p class="role" data-person="1" aria-hidden="true">Clothing Brand</p>
+            <p class="role" data-person="2" aria-hidden="true">Robotician</p>
+            <p class="role" data-person="3" aria-hidden="true">Programmer</p>
+            <p class="role" data-person="4" aria-hidden="true">Esports</p>
+            <p class="role" data-person="5" aria-hidden="true">Content Maker</p>
+
+            <!-- Interactive zones -->
+            <button class="hotspot" type="button" data-person="1" aria-label="Clothing Brand"></button>
+            <button class="hotspot" type="button" data-person="2" aria-label="Robotician"></button>
+            <button class="hotspot" type="button" data-person="3" aria-label="Programmer"></button>
+            <button class="hotspot" type="button" data-person="4" aria-label="Esports"></button>
+            <button class="hotspot" type="button" data-person="5" aria-label="Content Maker"></button>
+          </div>
+
+          <a class="hero__hint" href="#experiences" aria-hidden="true" tabindex="-1">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </a>
+        </section>
+
+
+        <!-- Experiences: a glass folder of small pages, each zooming up into its guided tour (experiences/experiences.ts, tour.ts) -->
+        <section class="xp page" id="experiences" aria-label="Experiences">
+          <div class="xp__bg" aria-hidden="true"></div>
+          <div class="xp__app"></div>
+        </section>
+
+        <!-- Draft: the HQ, a 3D room, one zone per part of the portfolio (hq/hq.ts) — /?preview=hq -->
+        <section class="hq page page--draft" id="hq" aria-labelledby="hq-title">
+          <div class="hq__stage"></div>
+          <div class="hq__labels"></div>
+          <header class="hq__head">
+            <h2 class="hq__title" id="hq-title">HQ</h2>
+            <p class="hq__crumb"></p>
+            <button class="hq__back" type="button" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Back to the HQ
+            </button>
+          </header>
+          <nav class="hq__zones" aria-label="Zones"></nav>
+          <p class="hq__tip" aria-hidden="true"></p>
+          <aside class="signs__panel hq__panel" aria-hidden="true" inert>
+            <button class="signs__panel-close" type="button" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            </button>
+            <div class="signs__panel-body" data-own-scroll></div>
+          </aside>
+          <div class="hq__loading" aria-hidden="true"><span>Opening the HQ</span></div>
+        </section>
+
+        <!-- Draft: the previous Experiences, a 3D street pole (signs/signs.ts) — /?preview=signs -->
+        <section class="signs page page--draft" id="signs" aria-labelledby="signs-title">
+          <div class="signs__stage"></div>
+          <header class="signs__head">
+            <h2 class="signs__title" id="signs-title">Experiences</h2>
+            <p class="signs__hint">Drag to turn · click a sign</p>
+          </header>
+          <nav class="signs__nav" aria-label="Experiences"></nav>
+          <p class="signs__tip" aria-hidden="true"></p>
+          <aside class="signs__panel" aria-hidden="true" inert>
+            <button class="signs__panel-close" type="button" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            </button>
+            <div class="signs__panel-body" data-own-scroll></div>
+          </aside>
+        </section>
+
+        <section class="brand page" id="brand" aria-labelledby="brand-title">
+          <div class="brand__scene" aria-hidden="true">
+            <img class="brand__layer" src="/src/assets/brand/scene-bg.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="brand__layer" src="/src/assets/brand/scene-shadow.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="brand__layer brand__layer--hero" src="/src/assets/brand/scene-hero.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+          </div>
+
+          <div class="brand__menubar" aria-hidden="true">
+            <div class="brand__menubar-left">
+              <svg class="brand__menubar-apple" viewBox="0 0 170 170" aria-hidden="true">
+                <path d="M150.4 129.6c-2.8 6.5-6.1 12.5-10 18-5.3 7.6-9.7 12.9-13 15.8-5.2 4.8-10.8 7.3-16.8 7.4-4.3 0-9.5-1.2-15.5-3.7-6-2.5-11.6-3.7-16.6-3.7-5.3 0-11 1.2-17.1 3.7-6.1 2.5-11 3.8-14.8 3.9-5.8.2-11.5-2.3-17.1-7.6-3.6-3.1-8.2-8.6-13.7-16.5-5.9-8.4-10.7-18.2-14.5-29.3-4-12-6.1-23.5-6.1-34.7 0-12.8 2.8-23.8 8.3-33.1 4.4-7.4 10.2-13.3 17.5-17.6 7.3-4.3 15.2-6.5 23.7-6.6 4.6 0 10.6 1.4 18.1 4.3 7.5 2.9 12.3 4.3 14.4 4.3 1.6 0 6.9-1.7 15.9-5.1 8.5-3.1 15.7-4.4 21.6-3.9 15.9 1.3 27.9 7.6 35.8 18.9-14.2 8.6-21.3 20.7-21.1 36.1.1 12 4.5 22 13.1 29.9 3.9 3.7 8.3 6.6 13.1 8.6-1.1 3.1-2.2 6-3.4 8.9zM119.1 3.5c0 9.5-3.5 18.4-10.4 26.6-8.3 9.8-18.4 15.4-29.3 14.5-.1-1.1-.2-2.3-.2-3.5 0-9.1 4-18.9 11-25.9 3.5-3.5 7.9-6.5 13.2-8.8 5.3-2.3 10.3-3.6 15-3.8.2 1 .3 2 .3 3z" fill="#fff"/>
+              </svg>
+              <span class="brand__menubar-item brand__menubar-item--bold">Xandvar</span>
+              <span class="brand__menubar-item">File</span>
+              <span class="brand__menubar-item">Edit</span>
+              <span class="brand__menubar-item">View</span>
+              <span class="brand__menubar-item">Window</span>
+              <span class="brand__menubar-item">Help</span>
+            </div>
+            <div class="brand__menubar-right">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18.5a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8z" fill="currentColor" /><path d="M6.5 15c3-2.6 8-2.6 11 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M3 11c5-4.3 13-4.3 18 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="4" y="9" width="12" height="6" fill="currentColor" /><path d="M21 10v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <span class="brand__menubar-clock">9:41</span>
+            </div>
+          </div>
+
+          <div class="brand__particles" aria-hidden="true"></div>
+
+          <!-- The phone: a CSS-3D iPhone holding everything about the brand
+               (Instagram, music, blueprints, messages, story). See brand/phone.ts. -->
+          <div class="phone" data-view="lock">
+            <div class="phone__scaler">
+              <div class="phone__body">
+                <div class="phone__edge" aria-hidden="true"></div>
+                <div class="phone__frame">
+                  <div class="phone__screen">
+                    <img class="phone__wallpaper" src="/src/assets/brand/scene-bg.webp" alt="" draggable="false" />
+
+                    <div class="phone__status" aria-hidden="true">
+                      <span class="phone__status-time">9:41</span>
+                      <span class="phone__island"></span>
+                      <span class="phone__status-icons">
+                        <svg viewBox="0 0 20 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor" /><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor" /><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor" /></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 18.5a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8z" fill="currentColor" /><path d="M6.5 15c3-2.6 8-2.6 11 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /><path d="M3 11c5-4.3 13-4.3 18 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+                        <svg viewBox="0 0 28 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity="0.5" /><rect x="2.5" y="2.5" width="16" height="8" rx="2" fill="currentColor" /><path d="M25.5 4.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5" /></svg>
+                      </span>
+                    </div>
+
+                    <!-- Lock screen -->
+                    <div class="phone__view phone__lock" data-view="lock">
+                      <p class="phone__lock-date"></p>
+                      <p class="phone__lock-time">9:41</p>
+                      <div class="phone__notifs"></div>
+                      <div class="np-widget np-widget--lock">
+                        <div class="np-widget__row">
+                          <img class="np-art np-widget__art" alt="" draggable="false" />
+                          <div class="np-widget__meta">
+                            <p class="np-title np-widget__title">Ren's Mind</p>
+                            <p class="np-artist np-widget__artist"></p>
+                          </div>
+                          <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+                        </div>
+                        <div class="np-widget__progress">
+                          <span class="np-time-current">0:00</span>
+                          <div class="np-bar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="np-bar-fill"></div></div>
+                          <span class="np-time-duration">0:00</span>
+                        </div>
+                        <div class="np-controls">
+                          <button class="np-prev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M6 12l11-6v12L6 12z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+                          <button class="np-play" type="button" aria-label="Play"><svg class="np-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l12-7z" fill="currentColor" /></svg><svg class="np-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg></button>
+                          <button class="np-next" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M18 12L7 6v12l11-6z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+                        </div>
+                      </div>
+                      <button class="phone__unlock" type="button">Tap to open</button>
+                    </div>
+
+                    <!-- Home screen -->
+                    <div class="phone__view phone__home" data-view="home">
+                      <button class="np-widget np-widget--home" type="button" data-open="music" aria-label="Open Music">
+                        <img class="np-art np-widget__art" alt="" draggable="false" />
+                        <span class="np-widget__meta">
+                          <span class="np-widget__label">Now playing</span>
+                          <span class="np-title np-widget__title">Ren's Mind</span>
+                          <span class="np-artist np-widget__artist"></span>
+                        </span>
+                        <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+                      </button>
+
+                      <button class="phone__photo-widget" type="button" data-open="notes" aria-label="Open the Xandvar story in Notes">
+                        <img src="/src/assets/brand/hoodie-model.webp" alt="" draggable="false" />
+                        <span class="phone__photo-widget-caption">
+                          <strong>xandvar</strong>
+                          <span>X marks the variables</span>
+                        </span>
+                      </button>
+
+                      <div class="phone__apps">
+                        <button class="phone__app-icon" type="button" data-open="instagram">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <defs>
+                              <radialGradient id="ig-gradient" cx="30%" cy="107%" r="150%">
+                                <stop offset="0%" stop-color="#fdf497" />
+                                <stop offset="15%" stop-color="#fdf497" />
+                                <stop offset="35%" stop-color="#fd5949" />
+                                <stop offset="60%" stop-color="#d6249f" />
+                                <stop offset="90%" stop-color="#285AEB" />
+                              </radialGradient>
+                            </defs>
+                            <rect width="48" height="48" fill="url(#ig-gradient)" />
+                            <rect x="12" y="12" width="24" height="24" rx="7.5" fill="none" stroke="#fff" stroke-width="2.6" />
+                            <circle cx="24" cy="24" r="6.2" fill="none" stroke="#fff" stroke-width="2.6" />
+                            <circle cx="31.6" cy="16.4" r="1.8" fill="#fff" />
+                          </svg>
+                          <span>Instagram</span>
+                        </button>
+                        <button class="phone__app-icon" type="button" data-open="files">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <rect width="48" height="48" fill="#fff" />
+                            <path d="M9 16a3 3 0 013-3h8l3 3h13a3 3 0 013 3v14a3 3 0 01-3 3H12a3 3 0 01-3-3z" fill="#1a8cff" />
+                            <path d="M9 20h30v13a3 3 0 01-3 3H12a3 3 0 01-3-3z" fill="#4fb0ff" />
+                          </svg>
+                          <span>Blueprints</span>
+                        </button>
+                        <button class="phone__app-icon" type="button" data-open="notes">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <rect width="48" height="48" fill="#fff" />
+                            <rect width="48" height="13" fill="#ffd60a" />
+                            <path d="M8 22h32M8 29h32M8 36h22" stroke="#d1d1d6" stroke-width="1.6" />
+                          </svg>
+                          <span>Notes</span>
+                        </button>
+                      </div>
+
+                      <div class="phone__dock">
+                        <button class="phone__app-icon" type="button" data-open="messages" aria-label="Messages">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <rect width="48" height="48" fill="#34c759" />
+                            <path d="M24 11c-8.8 0-15 5.6-15 12.2 0 3.8 2 7.1 5.3 9.3-.3 2.3-1.4 4.2-3 5.5 3.3 0 6-1 7.9-2.8 1.5.4 3.1.6 4.8.6 8.8 0 15-5.6 15-12.6S32.8 11 24 11z" fill="#fff" />
+                          </svg>
+                          <span class="phone__badge" hidden></span>
+                        </button>
+                        <button class="phone__app-icon" type="button" data-open="music" aria-label="Music">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <rect width="48" height="48" fill="#121212" />
+                            <circle cx="24" cy="24" r="14" fill="#1ed760" />
+                            <path d="M16.5 27.8c4.3-1.3 9.2-1 13 1.2" fill="none" stroke="#121212" stroke-width="1.8" stroke-linecap="round" />
+                            <path d="M15.8 23.5c5-1.5 10.8-1.2 15.2 1.4" fill="none" stroke="#121212" stroke-width="2.1" stroke-linecap="round" />
+                            <path d="M15 19c5.6-1.7 12.5-1.3 17.7 1.8" fill="none" stroke="#121212" stroke-width="2.4" stroke-linecap="round" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Apps -->
+                    <section class="phone__view phone-app phone-app--music" data-view="music" aria-label="Music">
+                      <header class="phone-app__bar">
+                        <svg class="phone-app__bar-logo" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle cx="12" cy="12" r="12" fill="#1ed760" />
+                          <path d="M6.2 15.4c3.3-1 7.1-.8 10.1 1" fill="none" stroke="#000" stroke-width="1.4" stroke-linecap="round" />
+                          <path d="M5.6 12c3.8-1.2 8.3-1 11.7 1.1" fill="none" stroke="#000" stroke-width="1.7" stroke-linecap="round" />
+                          <path d="M5 8.5c4.3-1.3 9.6-1 13.6 1.4" fill="none" stroke="#000" stroke-width="1.9" stroke-linecap="round" />
+                        </svg>
+                        <span>Ren's Mind</span>
+                      </header>
+                      <div class="music">
+                        <img class="np-art music__art" alt="" draggable="false" />
+                        <div class="music__meta">
+                          <p class="np-title music__title">Loading…</p>
+                          <p class="np-artist music__artist"></p>
+                        </div>
+                        <div class="np-bar music__bar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                          <div class="np-bar-fill"></div>
+                          <div class="np-bar-handle"></div>
+                        </div>
+                        <div class="music__times"><span class="np-time-current">0:00</span><span class="np-time-duration">0:00</span></div>
+                        <div class="np-controls music__controls">
+                          <button class="np-prev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M6 12l11-6v12L6 12z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+                          <button class="np-play" type="button" aria-label="Play"><svg class="np-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l12-7z" fill="currentColor" /></svg><svg class="np-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg></button>
+                          <button class="np-next" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M18 12L7 6v12l11-6z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+                        </div>
+                        <p class="music__note">Streaming from YouTube</p>
+                      </div>
+                    </section>
+
+                    <section class="phone__view phone-app phone-app--messages brand__messages" data-view="messages" aria-label="Messages">
+                      <div class="brand__messages-header">
+                        <button class="brand__messages-back" type="button" aria-label="Back to messages" tabindex="-1">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        </button>
+                        <span class="brand__messages-avatar"></span>
+                        <span class="brand__messages-name"></span>
+                        <span class="brand__messages-title">Messages</span>
+                      </div>
+                      <div class="brand__messages-thread" data-own-scroll></div>
+                      <div class="brand__messages-list" data-own-scroll></div>
+                      <div class="brand__messages-cursor" aria-hidden="true"></div>
+                    </section>
+
+                    <section class="phone__view phone-app phone-app--instagram" data-view="instagram" aria-label="Instagram"></section>
+
+                    <section class="phone__view phone-app phone-app--files" data-view="files" aria-label="Blueprints">
+                      <header class="phone-app__large-title">
+                        <span class="phone-app__crumb">Files</span>
+                        <h3>Blueprints</h3>
+                      </header>
+                      <div class="files" data-own-scroll>
+                        <ul class="files__list"></ul>
+                        <p class="files__hint">Tap a file to open it on the Mac</p>
+                      </div>
+                    </section>
+
+                    <section class="phone__view phone-app phone-app--notes" data-view="notes" aria-label="Notes">
+                      <header class="phone-app__bar phone-app__bar--notes">
+                        <span class="phone-app__crumb">‹ Notes</span>
+                      </header>
+                      <article class="notes" data-own-scroll>
+                        <p class="notes__date">X and Variables</p>
+                        <h3 class="notes__title">Xandvar</h3>
+                        <p>
+                          Xandvar (X and Variables) is a streetwear brand built around the unknown: the X, the variable,
+                          the path you haven't found yet.
+                        </p>
+                        <p>
+                          Its world is raw and grainy — black and white, acid-washed and sun-faded pieces, hand-drawn
+                          graffiti marks and touches of acid green.
+                        </p>
+                        <p>
+                          Lines like “Don't follow me, I'm lost too” and “X marks the variables” carry its message: the
+                          brand doesn't show you the way, it lets you walk your own.
+                        </p>
+                        <h4 class="notes__heading">What I made</h4>
+                        <ul class="notes__checklist">
+                          <li>Logo &amp; brand identity</li>
+                          <li>Clothing designs &amp; tech packs</li>
+                          <li>Social media content</li>
+                          <li>This website</li>
+                        </ul>
+                      </article>
+                    </section>
+
+                    <button class="phone__banner" type="button" data-open="messages" tabindex="-1">
+                      <span class="phone__banner-icon" aria-hidden="true"></span>
+                      <span class="phone__banner-body">
+                        <span class="phone__banner-top"><strong class="phone__banner-name"></strong><span>now</span></span>
+                        <span class="phone__banner-text"></span>
+                      </span>
+                    </button>
+
+                    <button class="phone__homebar" type="button" aria-label="Home screen"></button>
+                  </div>
+                  <div class="phone__glare" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <img class="brand__logo" src="/src/assets/brand/logo.webp" alt="" aria-hidden="true" draggable="false" />
+
+          <h2 class="brand__wordmark" id="brand-title">xandvar</h2>
+
+          <div class="brand__collection">
+            <div class="brand__shelf">
+              <div class="brand__shelf-track"></div>
+            </div>
+            <p class="brand__collection-tag">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" fill="currentColor" /></svg>
+              Brand Identity
+            </p>
+          </div>
+
+          <div class="brand__side">
+            <div class="brand__viewer">
+              <button class="brand__viewer-nav brand__viewer-nav--prev" type="button" aria-label="Previous piece">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+
+              <div class="brand__viewer-frame"></div>
+
+              <button class="brand__viewer-nav brand__viewer-nav--next" type="button" aria-label="Next piece">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            </div>
+
+            <p class="brand__viewer-name"></p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Back to the home page — shown on every other page (see pages.ts) -->
+      <button class="home-btn" type="button" data-goto="home" aria-label="Back to home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <span>Home</span>
+      </button>
+
+      <!-- The site's music: plays across every page (see music/player.ts) -->
+      <div class="mini-player" role="group" aria-label="Music">
+        <img class="np-art mini-player__art" alt="" draggable="false" />
+        <span class="mini-player__meta">
+          <span class="np-title mini-player__title">Ren's Mind</span>
+          <span class="np-artist mini-player__artist"></span>
+          <span class="mini-player__hint">Sound off — click anywhere</span>
+        </span>
+        <span class="np-eq mini-player__eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="np-controls mini-player__controls">
+          <button class="np-prev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M6 12l11-6v12L6 12z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+          <button class="np-play" type="button" aria-label="Play"><svg class="np-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l12-7z" fill="currentColor" /></svg><svg class="np-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg></button>
+          <button class="np-next" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M18 12L7 6v12l11-6z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
+        </span>
+        <span class="np-bar mini-player__bar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="np-bar-fill"></span></span>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

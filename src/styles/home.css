@@ -1,0 +1,216 @@
+/* ------------------------------------------------------------------ *
+ * Home (see home/home.ts): a full-screen light page.
+ *
+ *   header   the logo, written on a 3D drum
+ *   stack    one card per section, stacked at the bottom of the screen;
+ *            each card shows its section live (an iframe in preview
+ *            mode, see preview.ts). Hovering one opens it up like an
+ *            accordion; clicking it grows it to fill the screen, then the
+ *            real section takes its place.
+ *
+ * Sizes come from one unit, --u, so the composition scales with the screen.
+ * ------------------------------------------------------------------ */
+
+.home {
+  --page-bg: #efefec;
+  --page-ink: #0b0b0b;
+  --u: min(1.6vh, 1.1vw);
+  --thin: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  color: var(--page-ink);
+  background: var(--page-bg);
+}
+
+/* Film grain over the page (under the cards' live views, which have their own look). */
+.home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Header: the logo, centred ------------------------------------------------------ */
+
+.site {
+  position: absolute;
+  z-index: 5;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding-top: calc(var(--u) * 2.2);
+}
+
+/* ---- Logo: letters around a drum -------------------------------------------------------
+ * Each letter sits on the side of a cylinder (home.ts sets --a per letter).
+ * Seen in close perspective, the letters facing you swell and the ones
+ * turning away squeeze: a bulging, warped wordmark. */
+
+.drum {
+  --slot: 0.7em; /* width of one letter's slot on the drum */
+  position: relative;
+  width: calc(var(--slot) * 7.2);
+  height: 1.5em;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: calc(var(--u) * 5.2);
+  font-weight: 800;
+  line-height: 1;
+  perspective: 2em;
+}
+
+.drum__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--rad) * -1)) rotateY(var(--spin, 0deg));
+}
+
+.drum__char {
+  position: absolute;
+  left: calc(var(--slot) / -2);
+  top: -0.5em;
+  width: var(--slot);
+  text-align: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(var(--a)) translateZ(var(--rad));
+}
+
+/* ---- Cards ----------------------------------------------------------------------------
+ * Every card is a full-screen sheet, slid down into place with a transform
+ * (home.ts animates its yPercent — GPU-only, nothing repaints). Its sides and
+ * top corners are trimmed by clip-path: --side (inset left and right) and
+ * --round (1 → 0), which only change while a card grows to fill the screen.
+ *
+ * No band, no border: the cards are told apart by shadow alone — a dark
+ * shade along each card's top edge (under its white title) and the shadow
+ * each card casts on the one behind it. The live view starts from --peek of
+ * the way down its section and moves with the card's top edge; that offset
+ * is scaled by --round, so when the card has grown to fill the screen
+ * (--round 0) the live view sits exactly where the real section will be. */
+
+.stack {
+  position: absolute;
+  inset: 0;
+}
+
+.card {
+  --side: 4%;
+  --round: 1;
+  --peek: 0%;
+  --band: calc(var(--u) * 7); /* height of the shade behind the title */
+  --r: calc(var(--u) * 1.6 * var(--round));
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(0 var(--side) 0 var(--side) round var(--r) var(--r) 0 0);
+  will-change: transform;
+  background: #16171c; /* shows while the live view loads */
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.card:focus-visible {
+  outline: none;
+}
+
+.card:focus-visible .card__title {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.card__live {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  transform: translateY(calc(var(--peek) * var(--round) * -1));
+  pointer-events: none; /* a click anywhere on the card opens it */
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.card__live.is-loaded {
+  opacity: 1;
+}
+
+/* Title left, "Enter" right (shown on hover), in white over a shade that
+   fades from the card's top edge into its live view. */
+.card__band {
+  position: absolute;
+  left: var(--side);
+  right: var(--side);
+  top: 0;
+  height: var(--band);
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--u) * 2);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2.2) 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.25) 55%, transparent);
+  color: #fff;
+  font-family: var(--thin);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.card__title {
+  font-size: calc(var(--u) * 2.2);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.card__go {
+  margin-left: auto;
+  padding-top: calc(var(--u) * 0.5);
+  font-size: max(10px, calc(var(--u) * 0.95));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  translate: -6px 0;
+  transition: opacity 0.3s ease, translate 0.3s ease;
+}
+
+.card.is-hovered .card__go,
+.card:focus-visible .card__go {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* The shadow a card casts on the one behind it: a strip just above its top
+   edge, moved together with the card (home.ts). The element is as tall as a
+   card — so the same yPercent puts both in the same place — and only its
+   top strip is painted. */
+.card-shadow {
+  --side: 4%;
+  --h: calc(var(--u) * 6);
+  position: absolute;
+  top: calc(var(--h) * -1);
+  left: var(--side);
+  right: var(--side);
+  height: 100%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.75)) top / 100% var(--h) no-repeat;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ---- Narrow / portrait screens --------------------------------------------------------- */
+
+@media (max-aspect-ratio: 1 / 1) {
+  .home {
+    --u: 1.9vw;
+  }
+}

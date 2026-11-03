@@ -1,0 +1,141 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --font-sans: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* the site is a controlled deck of full-screen pages, not a scrollable document — see pages.ts */
+  overscroll-behavior: none;
+  background: var(--bg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ------------------------------------------------------------------ *
+ * Page deck: #viewport is the one true scroll boundary (fixed to the
+ * screen, clips everything). #pages holds the sections; pages.ts drives
+ * which one is visible via opacity + blur — no vertical movement, so
+ * there is never a seam where two sections are simultaneously visible.
+ * ------------------------------------------------------------------ */
+
+#viewport {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: none; /* pages.ts owns swipe/wheel navigation */
+}
+
+#pages {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+/* Belt-and-suspenders alongside the `inert` attribute pages.ts toggles:
+   an inactive page must never intercept a click meant for the one on top. */
+.page[inert] {
+  pointer-events: none;
+  /* not just transparent: an opacity-0 page is still composited, and four
+     full-screen pages of big layers (3D collage, photo layers, video shelf)
+     stacked at once is enough to exhaust the compositor */
+  visibility: hidden;
+}
+
+/* "Home" button: a small frosted pill, legible over light and dark pages.
+   Shown on every page but the home page itself (body[data-page], see pages.ts). */
+.home-btn {
+  position: absolute;
+  z-index: 50;
+  left: max(16px, 1.6vw);
+  bottom: max(16px, 2.2vh);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(18, 18, 20, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  font: 500 12px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.4s ease, background-color 0.2s ease;
+}
+
+.home-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.home-btn:hover,
+.home-btn:focus-visible {
+  background: rgba(18, 18, 20, 0.8);
+}
+
+.home-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+body:not([data-page]) .home-btn,
+body[data-page='home'] .home-btn {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s 0.4s;
+}
+
+.is-preview .home-btn {
+  display: none;
+}
+
+/* A draft page: kept in the markup, out of the site (see pages.ts). */
+.page--draft:not(.is-previewed) {
+  display: none;
+}
+
+/* Preview mode (see preview.ts): only the previewed section, shown as is. */
+.is-preview .page:not(.is-previewed) {
+  display: none;
+}
+
+.is-preview .page.is-previewed {
+  opacity: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

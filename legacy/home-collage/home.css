@@ -1,0 +1,502 @@
+/* ------------------------------------------------------------------ *
+ * Home (see home/home.ts): laid out like a portfolio "case-study shot".
+ *
+ *   backdrop        a grainy blue gradient photo (assets/home/backdrop.webp)
+ *   credits         three small caps lines across the top
+ *   frame           a blue card with a Safari window floating on it
+ *   page            inside the window: white paper, a tight 3D collage of
+ *                   torn prints held by paper clips, with pen doodles around
+ *
+ * Proportions were measured off the reference image (736×584): the window
+ * is 1.364× as wide as it is tall and the blue card overhangs it by 2.7%
+ * (top/bottom) and 4.6% (sides) of the window's height. The window itself
+ * is larger than in the reference (74% of the viewport height instead of
+ * 63%) so the collage stays comfortably clickable.
+ *
+ * Everything inside the window is sized from one unit, --u: the page area
+ * is 62.5u tall, so the whole composition scales with the window. The
+ * collage spans 27–88% of the page height, as in the reference.
+ * ------------------------------------------------------------------ */
+
+.home {
+  --ink: #1c2a78; /* pen on paper: the notes on the backs of the prints */
+  --paper: #fefefd;
+  /* the web page in the window is in dark mode */
+  --page-bg: #131419;
+  --page-ink: #c9d1ff;
+  --card: #141a5e;
+  --win-h: min(74vh, 90vw / 1.364);
+  --win-w: calc(var(--win-h) * 1.364);
+  --u: calc(var(--win-h) * 0.01509); /* (page height = 94.3% of the window) / 62.5 */
+  --hand: 'Shadows Into Light Two', 'Segoe Print', cursive;
+  --serif: Georgia, 'Times New Roman', serif;
+  overflow: hidden;
+  color: #fff;
+  background: #071230 url('../assets/home/backdrop.webp') center / cover no-repeat;
+}
+
+/* ---- Credits: the three caption lines across the top ------------------------------- */
+
+.home__credit {
+  position: absolute;
+  z-index: 2;
+  top: 4.6vh;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(9px, 1.25vh, 13px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.home__credit--left {
+  left: 4.2vw;
+}
+
+.home__credit--centre {
+  left: 50%;
+  translate: -50% 0;
+  font-weight: 800;
+}
+
+.home__credit--right {
+  right: 4.2vw;
+}
+
+/* ---- Frame: blue card + Safari window ---------------------------------------------- */
+
+.home__frame {
+  position: absolute;
+  z-index: 2;
+  top: 13.2vh;
+  left: calc(50% - var(--win-w) / 2);
+  width: var(--win-w);
+  height: var(--win-h);
+}
+
+.home__frame::before {
+  content: '';
+  position: absolute;
+  inset: calc(var(--win-h) * -0.027) calc(var(--win-h) * -0.046);
+  background: var(--card);
+  /* lifts the card off the backdrop: a deep soft shadow plus a tighter one under its edge */
+  box-shadow:
+    0 calc(var(--win-h) * 0.07) calc(var(--win-h) * 0.16) rgba(0, 0, 0, 0.75),
+    0 calc(var(--win-h) * 0.02) calc(var(--win-h) * 0.04) rgba(0, 0, 0, 0.55);
+}
+
+.browser {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--u) * 1);
+  background: var(--page-bg);
+  /* the page floats above the card: a wide soft shadow plus a close contact one */
+  box-shadow:
+    0 calc(var(--u) * 3) calc(var(--u) * 8) rgba(0, 0, 0, 0.6),
+    0 calc(var(--u) * 0.8) calc(var(--u) * 2) rgba(0, 0, 0, 0.45);
+}
+
+.browser__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.4);
+  height: calc(var(--u) * 3.8);
+  padding: 0 calc(var(--u) * 1.6);
+  background: #232327;
+  border-bottom: 1px solid #36363b;
+  color: #98989f;
+}
+
+.browser__lights {
+  display: flex;
+  gap: calc(var(--u) * 0.65);
+  margin-right: calc(var(--u) * 0.6);
+}
+
+.browser__lights i {
+  width: calc(var(--u) * 1.05);
+  height: calc(var(--u) * 1.05);
+  border-radius: 50%;
+  background: #fe5f57;
+}
+
+.browser__lights i:nth-child(2) { background: #febc2e; }
+.browser__lights i:nth-child(3) { background: #28c840; }
+
+.browser__icon {
+  flex: none;
+  width: calc(var(--u) * 1.5);
+  height: calc(var(--u) * 1.5);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.browser__icon--chevron {
+  margin-left: calc(var(--u) * -0.6);
+}
+
+.browser__address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 1);
+  width: 40%;
+  height: calc(var(--u) * 2.3);
+  margin-inline: auto;
+  border-radius: calc(var(--u) * 0.6);
+  background: #35353a;
+  font-family: var(--font-sans);
+  font-size: max(8px, calc(var(--u) * 0.85));
+  font-weight: 600;
+  color: #d8d8dd;
+}
+
+.browser__address .browser__icon {
+  width: calc(var(--u) * 1.1);
+  height: calc(var(--u) * 1.1);
+}
+
+/* The page shown in the window. */
+.browser__page {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  color: var(--page-ink);
+  background-color: var(--page-bg);
+  /* the faintest paper tooth: fine monochrome noise, baked into an inline SVG */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.home__defs {
+  position: absolute;
+}
+
+/* ---- Pen strokes -------------------------------------------------------------
+ * Every doodle is a plain SVG path roughened by the #ink-rough filter (see
+ * index.html). Paths carry pathLength="1" so the entrance can "draw" them. */
+
+.ink {
+  overflow: visible;
+  fill: none;
+  stroke: var(--page-ink);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#ink-rough);
+  pointer-events: none;
+}
+
+.ink path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- Nav: small lowercase serif, marked up in pen ---------------------------- */
+
+.home__nav {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  width: min(100% - 32px, calc(var(--u) * 64));
+  padding-top: calc(var(--u) * 2.6);
+  font-family: var(--serif);
+  font-size: max(8px, calc(var(--u) * 0.95));
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+
+.home__nav-group {
+  display: flex;
+  gap: calc(var(--u) * 3.6);
+}
+
+.home__nav-link {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.home__nav-link:not(.is-current):hover,
+a.home__nav-link:not(.is-current):focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.home__nav-link--soon {
+  cursor: default;
+}
+
+/* the hand-drawn oval around "contact me" */
+.home__nav-mark {
+  position: absolute;
+  inset: -0.75em -1.1em;
+  width: calc(100% + 2.2em);
+  height: calc(100% + 1.5em);
+}
+
+/* the scribbled underline under the current page */
+.home__nav-mark--under {
+  inset: auto -0.2em -0.65em;
+  width: calc(100% + 0.4em);
+  height: 0.55em;
+}
+
+/* ---- Board: the collage and the notes written around it ---------------------- */
+
+.home__board {
+  position: relative;
+  flex: none;
+  left: calc(var(--u) * 1.5); /* the reference's collage sits slightly right of centre */
+  width: calc(var(--u) * 51.7);
+  margin-top: calc(var(--u) * 13.4); /* includes the space the greeting line will take back */
+}
+
+
+
+
+
+
+
+
+/* ---- Collage: the 3D scene ------------------------------------------------------- *
+ * .collage sets the camera; .collage__tilt is the "table" the pointer leans
+ * (home.ts). Each piece is placed by its own --x/--y/--w/--r/--z. */
+
+.collage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.386;
+  perspective: calc(var(--u) * 95);
+}
+
+.collage__tilt {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.snap,
+.decor {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  transform: translateZ(var(--z)) rotate(var(--r));
+}
+
+.snap {
+  height: var(--h);
+  container-type: inline-size; /* the back's handwriting scales with the print (cqw) */
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.25, 1.15);
+}
+
+/* Lifts off the paper and straightens up, toward the viewer. */
+.snap:hover,
+.snap:focus-within {
+  transform: translateZ(calc(var(--z) + var(--u) * 6)) rotate(calc(var(--r) * 0.25)) scale(1.07);
+}
+
+/* Picked up to be read: well above everything else, upright, and enlarged to
+   one common size (--flip, set per print in home.ts) so even the smallest
+   print's note is legible. */
+.snap.is-flipped {
+  transform: translateZ(calc(var(--u) * 12)) rotate(0deg) scale(var(--flip, 1.3));
+}
+
+.snap__card {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.snap__face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter: drop-shadow(0 calc(var(--u) * 0.25) calc(var(--u) * 0.4) rgba(0, 0, 0, 0.6));
+}
+
+.snap__front {
+  cursor: pointer;
+}
+
+.snap__front:focus-visible {
+  outline: 2px dashed var(--page-ink);
+  outline-offset: 4px;
+}
+
+.snap__back {
+  transform: rotateY(180deg);
+  cursor: pointer;
+}
+
+.snap__paper {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 5cqw 5cqw 6.5cqw;
+  background: #fff;
+  clip-path: var(--torn);
+}
+
+/* An empty print: the picture hasn't been added yet (see home/content.ts). */
+.snap__blank {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #3a3b42, #26272d);
+}
+
+.snap__paper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Four torn-edge outlines, dealt in turn so no two neighbours rip the same way. */
+.snap--torn-1 { --torn: polygon(0 3%, 7% 1%, 14% 3.5%, 23% 0.5%, 32% 2.5%, 44% 0, 56% 2%, 67% 0.5%, 79% 3%, 90% 1%, 100% 2.5%, 100% 100%, 0 100%); }
+.snap--torn-2 { --torn: polygon(0 0, 100% 0, 100% 97%, 91% 99.5%, 80% 97.5%, 69% 100%, 58% 98%, 45% 99.5%, 34% 97.5%, 22% 100%, 11% 98%, 0 99.5%); }
+.snap--torn-3 { --torn: polygon(0 1.5%, 9% 0, 20% 2%, 33% 0.5%, 47% 2.5%, 60% 0.5%, 74% 2%, 87% 0, 100% 1.5%, 100% 98.5%, 88% 100%, 75% 98%, 61% 99.5%, 46% 97.5%, 31% 99.5%, 18% 98%, 8% 100%, 0 98.5%); }
+.snap--torn-4 { --torn: polygon(2% 0, 100% 0, 98.5% 12%, 100% 26%, 98% 41%, 100% 57%, 98.5% 72%, 100% 88%, 98% 100%, 0 100%, 1.5% 86%, 0 70%, 2% 54%, 0 38%, 1.5% 22%, 0 9%); }
+
+/* The back: a note in pen on the print's blank side. */
+.snap__back .snap__paper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5cqw;
+  padding: 9cqw;
+  overflow: hidden;
+  color: var(--ink);
+  background: #fbfaf5 repeating-linear-gradient(transparent 0 calc(11cqw - 1px), rgba(28, 42, 120, 0.12) calc(11cqw - 1px) 11cqw);
+  font-family: var(--hand);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+
+.snap__title,
+.snap__note {
+  margin: 0;
+}
+
+.snap__title {
+  align-self: flex-start;
+  padding-bottom: 1.5cqw;
+  border-bottom: 1.5px solid currentColor;
+  font-size: 8.4cqw;
+  line-height: 1;
+}
+
+.snap__note {
+  font-size: 5.9cqw;
+  line-height: 1.35;
+}
+
+.snap__go {
+  align-self: flex-start;
+  color: #b3261e;
+  font-size: 6.2cqw;
+  text-decoration: none;
+}
+
+.snap__go:hover,
+.snap__go:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- Decor: doodles and paper clips ------------------------------------------------ */
+
+.decor {
+  pointer-events: none;
+}
+
+.decor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.decor--clip svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55));
+}
+
+/* ---- "More below" arrow: on the backdrop, under the window -------------------------- */
+
+.home .home__hint {
+  z-index: 2;
+  bottom: clamp(4px, 1.2vh, 14px);
+  color: #fff;
+}
+
+/* ---- Narrow / portrait screens ---------------------------------------------------------
+ * The window takes the screen's width instead and grows as tall as its page
+ * needs, so the collage stays big enough to tap. */
+
+@media (max-aspect-ratio: 1 / 1) {
+  .home {
+    --win-w: 92vw;
+    --u: 1.6vw;
+    --win-h: calc(var(--u) * 66.3);
+  }
+
+  .home__frame {
+    top: max(16vh, (100vh - var(--win-h)) / 2);
+  }
+
+  .home__credit {
+    top: 6vh;
+  }
+
+  .home__credit--centre {
+    display: none;
+  }
+
+  .home__nav-group {
+    gap: calc(var(--u) * 2.6);
+  }
+
+  .home__nav-link--soon:last-child {
+    display: none;
+  }
+
+  /* centred and a little narrower, so the doodles past its right edge stay in the window */
+  .home__board {
+    left: 0;
+    width: calc(var(--u) * 47);
+  }
+}

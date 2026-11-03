@@ -1,0 +1,659 @@
+/* ------------------------------------------------------------------ *
+ * "Xandvar": a poster-style showcase for the clothing brand. A static
+ * scene (background texture + ground shadow + the hooded figure, all
+ * pre-composed in Photoshop) fills the page; the wordmark sits in front
+ * of it. A looping shelf (left) drifts through behind-the-scenes photos
+ * and clips, purely ambient; an independent viewer (bottom-left) pages through
+ * the pieces of clothing with its own arrows — the two aren't synced, same
+ * as the reference poster, where the shelf and the featured piece show
+ * different things at once. The phone (right, see phone.css) holds
+ * everything else: Instagram, music, blueprints, messages, the story.
+ * ------------------------------------------------------------------ */
+
+.brand {
+  /* position/size come from .page (base.css) — this is one page in the deck */
+  position: relative;
+  overflow: hidden;
+  background: #050505;
+  color: #f5f3ef;
+  --brand-menubar-h: 30px;
+}
+
+/* ---- Background scene --------------------------------------------------- */
+
+.brand__scene {
+  position: absolute;
+  inset: 0;
+}
+
+.brand__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* The figure is cut out on a transparent layer, so lifting it above the shelf
+   (z-index 1, see .brand__collection) lets the shelf slide *behind* the hero.
+   .brand__scene has no z-index of its own, so this competes in .brand's
+   stacking context directly. */
+.brand__layer--hero {
+  z-index: 2;
+}
+
+/* ---- Particles: a rare, drifting dust mote crossing the scene -----------
+ * Sits above the static scene but below the shelf/wordmark/side UI, so it
+ * reads as atmosphere passing over the hero rather than a UI element. */
+
+.brand__particles {
+  position: absolute;
+  z-index: 2; /* same level as the hero layer but later in the DOM, so still over it */
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.brand__particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.25) 55%, transparent 75%);
+}
+
+/* ---- Menu bar (turns the section into a "Mac desktop") ---------------------
+ * Purely decorative chrome — the whole point is the desktop-metaphor already
+ * built for Blueprints/the player extends to the page itself. Every other
+ * top-anchored element (insta, blueprints, player) is pushed down by its
+ * height — see BRAND_MENUBAR_H below. */
+
+.brand__menubar {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--brand-menubar-h, 30px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: rgba(18, 18, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.brand__menubar-left,
+.brand__menubar-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 18px);
+}
+
+.brand__menubar-apple {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.brand__menubar-item {
+  display: none;
+}
+
+.brand__menubar-item--bold {
+  display: inline;
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .brand__menubar-item {
+    display: inline;
+  }
+}
+
+.brand__menubar-right svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  opacity: 0.9;
+}
+
+.brand__menubar-clock {
+  font-variant-numeric: tabular-nums;
+  min-width: 4.2em;
+  text-align: right;
+}
+
+/* ---- Messages (the phone's Messages app — see phone.css for the app shell) --- */
+
+.brand__messages-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand__messages-back {
+  display: none;
+  flex: none;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #0a84ff;
+  cursor: default;
+}
+
+.brand__messages-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+.brand__messages-avatar {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #48484a;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.brand__messages-name {
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.brand__messages-title {
+  display: none;
+  flex: 1;
+  text-align: center;
+  margin-right: 18px; /* balances the (hidden) back button so the title reads centred */
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* ---- List view (the inbox) --------------------------------------------------- */
+
+.brand__messages.is-list .brand__messages-back,
+.brand__messages.is-list .brand__messages-avatar,
+.brand__messages.is-list .brand__messages-name {
+  display: none;
+}
+
+.brand__messages.is-list .brand__messages-title {
+  display: block;
+}
+
+.brand__messages:not(.is-list) .brand__messages-back {
+  display: flex;
+}
+
+.brand__messages-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px 14px;
+  min-height: 220px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.brand__messages-list {
+  display: none;
+  flex-direction: column;
+  min-height: 220px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.brand__messages.is-list .brand__messages-list {
+  display: flex;
+}
+
+.brand__messages.is-list .brand__messages-thread {
+  display: none;
+}
+
+.brand__messages-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.brand__messages-row-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.brand__messages-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.brand__messages-row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.brand__messages-row-name {
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.brand__messages-row-time {
+  flex: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.66rem;
+}
+
+.brand__messages-row-snippet {
+  margin: 2px 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.7rem;
+}
+
+/* ---- Cursor (fake, drives the self-playing demo) ----------------------------- */
+
+.brand__messages-cursor {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.brand__messages-cursor svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand__messages-bubble {
+  max-width: 78%;
+  margin: 0;
+  padding: 7px 13px;
+  border-radius: 17px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.brand__messages-bubble.is-grouped {
+  margin-top: -3px;
+}
+
+.brand__messages-bubble--them {
+  align-self: flex-start;
+  background: #3a3a3c;
+  color: #fff;
+  border-bottom-left-radius: 5px;
+}
+
+.brand__messages-bubble--them.is-grouped {
+  border-top-left-radius: 5px;
+}
+
+.brand__messages-bubble--me {
+  align-self: flex-end;
+  background: #0a84ff;
+  color: #fff;
+  border-bottom-right-radius: 5px;
+}
+
+.brand__messages-bubble--me.is-grouped {
+  border-top-right-radius: 5px;
+}
+
+.brand__messages-typing {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 11px;
+  border-radius: 14px;
+  background: #3a3a3c;
+}
+
+.brand__messages-typing--them {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.brand__messages-typing--me {
+  align-self: flex-end;
+  background: #0a84ff;
+  border-bottom-right-radius: 4px;
+}
+
+.brand__messages-typing span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  animation: brand-typing-bounce 1s ease-in-out infinite;
+}
+
+.brand__messages-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.brand__messages-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes brand-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+
+
+.brand__logo {
+  position: absolute;
+  z-index: 3;
+  right: clamp(16px, 4vw, 40px);
+  bottom: clamp(16px, 4vh, 28px);
+  width: clamp(32px, 3.6vw, 50px);
+  height: auto;
+  opacity: 0.9;
+}
+
+.brand__wordmark {
+  position: absolute;
+  z-index: 3; /* front-most — in front of the hero, per the brief */
+  left: 50%;
+  bottom: clamp(20px, 4.5vh, 48px);
+  translate: -50% 0; /* the entrance tween in brand.ts deliberately never animates x/y
+                         on this element — mixing that with a plain CSS `translate`
+                         makes GSAP silently reset the latter to none */
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  font-size: clamp(2.3rem, 7.2vw, 5.4rem);
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Shelf (left, auto-looping) ---------------------------------------------
+ * One tall photo reads clearly at a time, with its neighbours just peeking in
+ * at the edges — the shelf's own width is only ~1.4× a piece's width, and it
+ * bleeds to the screen edge, matching the reference poster's proportions. */
+
+.brand__collection {
+  position: absolute;
+  z-index: 1; /* below .brand__layer--hero: the shelf runs behind the figure */
+  left: 0;
+  /* top-left, under the menu bar — the clothing viewer takes the bottom-left */
+  top: calc(var(--brand-menubar-h, 30px) + clamp(16px, 4vh, 40px));
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.brand__shelf {
+  --piece-h: clamp(210px, 36vh, 380px);
+  /* runs all the way into the hero figure (≈30–38vw from the left in the
+     16:9 scene) and passes behind it — the long right fade dissolves it
+     there instead of stopping short in the gap */
+  width: clamp(260px, 46vw, 900px);
+  /* a little taller than a piece so the hover zoom below has room to grow
+     into without being clipped by this element's own overflow:hidden */
+  height: calc(var(--piece-h) + 28px);
+  padding-block: 14px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 62%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 62%, transparent);
+}
+
+.brand__shelf-track {
+  display: flex;
+  align-items: center;
+  height: var(--piece-h);
+  gap: clamp(14px, 1.8vw, 24px);
+  padding-inline: clamp(18px, 5vw, 64px);
+}
+
+.brand__piece {
+  position: relative;
+  flex: none;
+  height: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.32s ease;
+  will-change: transform;
+}
+
+.brand__piece:hover {
+  transform: scale(1.12);
+  z-index: 2;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.55);
+}
+
+.brand__collection-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: rgba(245, 243, 239, 0.75);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.brand__collection-tag svg {
+  width: 15px;
+  height: 15px;
+  color: #e2241a;
+}
+
+.brand__piece img,
+.brand__piece video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---- Clothing viewer (bottom-left, arrow-paged) ---------------------------- */
+
+.brand__side {
+  position: absolute;
+  z-index: 2;
+  /* bottom-left, under the shelf — the right column belongs to the phone.
+     Spans the left column (screen edge → hero) and centres itself in it. */
+  left: 0;
+  width: 34vw;
+  bottom: clamp(20px, 4vh, 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 14px);
+}
+
+.brand__viewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.1vw, 14px);
+}
+
+.brand__viewer-frame {
+  position: relative;
+  /* tied to vh too, not just vw, so a short-but-wide window doesn't push it
+     up into the shelf above (this section never scrolls) */
+  width: clamp(150px, min(22vw, 34vh), 340px);
+  aspect-ratio: 1;
+}
+
+.brand__viewer-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.55));
+}
+
+.brand__viewer-nav {
+  flex: none;
+  width: clamp(32px, 3vw, 44px);
+  height: clamp(32px, 3vw, 44px);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: #fff;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.brand__viewer-nav svg {
+  width: 58%;
+  height: 58%;
+}
+
+.brand__viewer-nav:hover,
+.brand__viewer-nav:focus-visible {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.brand__viewer-nav:active {
+  transform: scale(0.86);
+}
+
+.brand__viewer-nav:focus-visible {
+  outline: 2px solid #e2241a;
+  outline-offset: 2px;
+}
+
+.brand__viewer-name {
+  margin: 0;
+  overflow: hidden; /* masks the SplitText rise-in, same technique as the tapes caption */
+  padding-bottom: 0.1em;
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  text-align: center;
+}
+
+/* ---- Narrow / portrait screens ----------------------------------------------
+ * The poster layout only works with room to spread out. Below it stacks
+ * instead — and, unlike the rest of the site, this one page scrolls
+ * internally there: there's more here (phone, wordmark, shelf, viewer)
+ * than a phone's height can show at a legible size at once. */
+@media (max-aspect-ratio: 1 / 1), (max-height: 480px) {
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 20px 20px 32px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .brand__scene {
+    position: relative;
+    inset: auto;
+    width: calc(100% + 40px);
+    margin: -20px -20px 0;
+    aspect-ratio: 16 / 11;
+    flex: none;
+  }
+
+  .brand__logo,
+  .brand__wordmark,
+  .brand__collection,
+  .brand__side {
+    position: static;
+    inset: auto;
+    translate: none;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .brand__logo {
+    align-self: flex-end;
+    order: 5;
+  }
+
+  .brand__wordmark {
+    font-size: clamp(2.2rem, 12vw, 3rem);
+    text-shadow: none;
+    margin-top: 12px;
+  }
+
+  .brand__collection {
+    width: 100%;
+  }
+
+  .brand__shelf {
+    width: 100%;
+    height: calc(var(--piece-h) + 58px);
+    padding-top: 44px;
+  }
+
+  .brand__side {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .brand__viewer-frame {
+    /* the vh-based clamp meant for the desktop poster layout collapses to
+       its 120px floor once .brand__side is full-width and stacked, making
+       the product photo read as small and (with the row's leftover width)
+       off-centre — mobile has the width to spare, so let it grow */
+    width: clamp(170px, 42vw, 240px);
+  }
+}

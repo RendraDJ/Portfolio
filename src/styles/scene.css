@@ -1,0 +1,186 @@
+/* ------------------------------------------------------------------ *
+ * The scene is authored on a 1920×1080 canvas. Everything inside the
+ * stage is positioned in %, and text scales with `cqw` (1cqw = 1% of
+ * the stage width), so no JS resize handler is needed.
+ * ------------------------------------------------------------------ */
+
+.hero {
+  /* position/size/overflow come from .page (base.css) — this is one page in the deck */
+  /* Dark, like the other sections — the five are cut out (transparent layers),
+     so they sit straight on it. */
+  --bg: #141416;
+  background: var(--bg);
+  perspective: 1600px; /* depth for the stage's subtle mouse-tilt (see scene.ts) */
+}
+
+.stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  aspect-ratio: 16 / 9;
+  /* "cover": fill the viewport, crop the overflow */
+  width: max(100%, calc(100dvh * 16 / 9));
+  overflow: hidden;
+  background: var(--bg);
+  container-type: size;
+  contain: layout paint;
+}
+
+/* Smoother compositing for the mouse-tilt (see scene.ts) — only where it
+   actually runs, so touch/no-hover devices don't pay for an idle GPU layer. */
+@media (hover: hover) and (pointer: fine) {
+  .stage {
+    will-change: transform;
+  }
+}
+
+/* Portrait screens: show all five people (fit width, anchored to the bottom
+   where the bodies bleed off the frame) instead of cropping to the middle.
+   The page itself is still a full 100dvh (every page is, for the deck's
+   crossfade to work) — the stage just doesn't need to fill all of it. */
+@media (max-aspect-ratio: 1 / 1) {
+  .stage {
+    width: 100%;
+    top: auto;
+    bottom: 0;
+    translate: -50% 0;
+  }
+}
+
+/* ---- "More below" hint ------------------------------------------------ */
+
+.hero__hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 4vh, 40px);
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  opacity: 0;
+  /* fades + slides up once the hero photo has settled (see scene.ts's reveal
+     duration), then hands the `transform` property off to the endless bob —
+     later animations in this list win ties, so there's no fight between them */
+  animation: hero-hint-in 0.9s ease-out 1.3s forwards, hero-hint-bob 2.2s ease-in-out 2.3s infinite;
+}
+
+.hero__hint svg {
+  width: 22px;
+  height: 22px;
+}
+
+@keyframes hero-hint-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 0.5; transform: translateY(0); }
+}
+
+@keyframes hero-hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__hint {
+    opacity: 0.5;
+    animation: none;
+  }
+}
+
+/* ---- Layers --------------------------------------------------------- */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Hidden until the images are decoded, then revealed by the intro tween. */
+.layer--base,
+.layer--idle {
+  opacity: 0;
+}
+
+.layer--dim,
+.layer--person {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.layer--idle {
+  will-change: transform; /* it's animating continuously for as long as the page is open */
+}
+
+.layer--idle,
+.layer--person {
+  transform-origin: var(--origin);
+}
+
+/* ---- Hotspots -------------------------------------------------------- */
+
+.hotspot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  clip-path: var(--clip);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* clip-path would crop an outline anyway: keyboard focus is shown by the highlight itself */
+.hotspot:focus {
+  outline: none;
+}
+
+/* ---- Role labels ------------------------------------------------------ */
+
+.role {
+  /* every label sits on the dark background: white, with a dark halo */
+  --role-color: #ffffff;
+  --role-halo: rgba(0, 0, 0, 0.55);
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  margin: 0;
+  translate: -50% 0;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  /* 1cqw = 1/100 of the stage width; never smaller than 13px on phones */
+  font-size: max(13px, 1.6cqw);
+  color: var(--role-color);
+  text-shadow: 0 0 0.35em var(--role-halo), 0 0 0.12em var(--role-halo);
+  will-change: opacity, transform;
+}
+
+
+/* ---- Per-person geometry (from the original design) -------------------- */
+
+[data-person='1'] { --origin: 29.97% 61.71%; --clip: polygon(37.32% 22.5%, 39.86% 27.4%, 39.2% 54.3%, 26.39% 102.68%, 20.15% 102.68%, 22.91% 42.91%, 32.91% 22.99%); }
+[data-person='2'] { --origin: 39.11% 70.23%; --clip: polygon(50.33% 44.69%, 50.82% 48.32%, 47.35% 72.66%, 39.67% 91.7%, 27.2% 99.75%, 27.47% 85.42%, 33.27% 58.43%, 44.42% 42.04%, 47.24% 41.25%); }
+[data-person='3'] { --origin: 54.27% 77.08%; --clip: polygon(39.34% 90.82%, 40.01% 86.11%, 48.62% 57.35%, 51.21% 54.41%, 53.64% 54.41%, 56.02% 56.27%, 69.76% 94.55%, 43.65% 99.85%, 39.62% 93.08%); }
+[data-person='4'] { --origin: 59.19% 55.65%; --clip: polygon(57.73% 28.31%, 61.32% 29.98%, 67.45% 49.02%, 67.17% 68.25%, 65.19% 83.27%, 63.58% 82.39%, 57.46% 73.55%, 50.78% 55.1%, 54.25% 33.21%, 55.69% 30.07%); }
+[data-person='5'] { --origin: 73.91% 62.22%; --clip: polygon(66.84% 22.95%, 69.6% 22.46%, 71.92% 24.62%, 80.48% 43.36%, 82.58% 51.71%, 83.35% 62.21%, 82.08% 102.45%, 78.77% 102.45%, 67.12% 92.14%, 65.52% 81.64%, 64.47% 27.17%); }
+
+.role[data-person='1'] { --x: 35.04%; --y: 14.5%; }
+.role[data-person='2'] { --x: 45.9%;  --y: 35.79%; }
+.role[data-person='3'] { --x: 53.28%; --y: 82.15%; }
+.role[data-person='4'] { --x: 58.32%; --y: 23.41%; }
+.role[data-person='5'] { --x: 79.43%; --y: 34.92%; }

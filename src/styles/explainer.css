@@ -1,0 +1,58 @@
+/* ------------------------------------------------------------------
+ * The explainer videos (src/experiences/explainers): an SVG stage, one
+ * short caption per scene, a dot per scene and a progress line.
+ * Laid out at 800 × 450 and scaled to its box.
+ * ------------------------------------------------------------------ */
+
+.xpx {
+  position: relative;
+  width: 800px;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #0b0b0b;
+  cursor: pointer;
+  user-select: none;
+}
+
+.xpx__stage { display: block; width: 100%; height: 100%; }
+
+.xpx__say {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  max-width: 88%;
+  margin: 0;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(10, 12, 16, 0.78);
+  color: #fff;
+  font: 700 25px/1.25 var(--font-sans, Montserrat), sans-serif;
+  text-align: center;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.xpx__say.is-in { animation: xpx-say 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+@keyframes xpx-say {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.xpx__dots { position: absolute; left: 50%; bottom: 12px; display: flex; gap: 6px; transform: translateX(-50%); }
+
+.xpx__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: width 0.3s, background-color 0.3s;
+}
+
+.xpx__dot.is-on { width: 24px; background: #b5b4ae; }
+.xpx__bar { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #b5b4ae; transform: scaleX(0); transform-origin: left; }

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <!-- First Contact: a touch on QT's head, its signal, the gesture recognised -->
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1c1d20" stroke-opacity="0.05" stroke-width="2"/></pattern>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.18"/></filter>
+  </defs>
+  <rect width="1600" height="1000" fill="#ecebe5"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <!-- QT -->
+  <g filter="url(#sh)">
+    <path d="M330 640h300l46 330H284z" fill="#fff" stroke="#1c1d20" stroke-width="6" stroke-linejoin="round"/>
+    <rect x="244" y="650" width="70" height="230" rx="35" fill="#fff" stroke="#1c1d20" stroke-width="6"/>
+    <rect x="646" y="650" width="70" height="230" rx="35" fill="#fff" stroke="#1c1d20" stroke-width="6"/>
+    <rect x="440" y="596" width="80" height="54" rx="10" fill="#d5d3cc" stroke="#1c1d20" stroke-width="6"/>
+    <rect x="270" y="300" width="420" height="310" rx="90" fill="#fff" stroke="#1c1d20" stroke-width="6"/>
+  </g>
+  <rect x="320" y="350" width="320" height="210" rx="46" fill="#1c1d20"/>
+  <g fill="none" stroke="#c9c8c2" stroke-width="12" stroke-linecap="round">
+    <path d="M385 445q30-36 60 0"/>
+    <path d="M515 445q30-36 60 0"/>
+    <path d="M440 500q40 34 80 0"/>
+  </g>
+  <rect x="460" y="736" width="40" height="40" rx="20" fill="#5c5d61"/>
+
+  <!-- the touch: a hand from above, ripples where it lands -->
+  <g fill="none" stroke="#5c5d61" stroke-linecap="round">
+    <path d="M520 262a90 46 0 0 1 150 -20" stroke-width="6"/>
+    <path d="M478 236a140 72 0 0 1 226 -30" stroke-width="5" stroke-opacity="0.6"/>
+    <path d="M436 210a190 98 0 0 1 300 -40" stroke-width="4" stroke-opacity="0.3"/>
+  </g>
+  <g transform="translate(610 296) rotate(35)" filter="url(#sh)" stroke="#1c1d20" stroke-width="6" stroke-linejoin="round">
+    <rect x="-64" y="-360" width="150" height="170" rx="46" fill="#d5d3cc"/>
+    <rect x="-30" y="-230" width="60" height="232" rx="30" fill="#d5d3cc"/>
+    <rect x="26" y="-232" width="54" height="96" rx="27" fill="#d5d3cc"/>
+    <rect x="70" y="-250" width="50" height="96" rx="25" fill="#d5d3cc"/>
+    <rect x="-96" y="-300" width="52" height="120" rx="26" fill="#d5d3cc" transform="rotate(-24 -70 -240)"/>
+  </g>
+  <path d="M592 286c8 10 30 8 36 -4" transform="rotate(35 610 296)" fill="none" stroke="#1c1d20" stroke-width="4" stroke-linecap="round" stroke-opacity="0.45"/>
+
+  <!-- the bubble -->
+  <g filter="url(#sh)">
+    <rect x="40" y="170" width="300" height="76" rx="38" fill="#1c1d20"/>
+    <path d="M290 238l40 40 -6 -44z" fill="#1c1d20"/>
+  </g>
+  <text x="190" y="218" text-anchor="middle" font-size="28" font-weight="700" fill="#fff">That feels nice</text>
+
+  <!-- the signal and the decision -->
+  <g filter="url(#sh)">
+    <rect x="860" y="380" width="620" height="520" rx="30" fill="#1c1d20"/>
+  </g>
+  <text x="900" y="436" font-size="18" fill="#fff" fill-opacity="0.55" font-family="Menlo, Consolas, monospace" letter-spacing="2">TOUCH SIGNAL</text>
+  <g stroke="#fff" stroke-opacity="0.1" stroke-width="2"><path d="M900 480h540M900 540h540M900 600h540"/></g>
+  <path d="M900 620h40l10-4 10 4h40l8-3 8 3h50l6-150 14 20 10-26 12 30 10-10 12 24 14-4 12 40 14 16 16-10 12-50 12 16 10-34 12 18 12-20 10 26 12 160h44l10-4 10 4h60l8-3 8 3h58" fill="none" stroke="#c9c8c2" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M1056 470h228v150H1056z" fill="#5c5d61" fill-opacity="0.18"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="22" fill="#fff">
+    <text x="900" y="690">duration</text><text x="1080" y="690" font-weight="700">1.05 s</text>
+    <text x="900" y="724">energy</text><text x="1080" y="724" font-weight="700">0.55</text>
+    <text x="900" y="758">motion</text><text x="1080" y="758" font-weight="700">112 px</text>
+  </g>
+  <text x="900" y="830" font-size="58" font-weight="800" fill="#c9c8c2" letter-spacing="-2">STROKE</text>
+  <text x="1440" y="828" font-size="24" fill="#fff" text-anchor="end" font-weight="700">head · 98%</text>
+  <rect x="900" y="852" width="540" height="12" rx="6" fill="#fff" fill-opacity="0.12"/>
+  <rect x="900" y="852" width="529" height="12" rx="6" fill="#5c5d61"/>
+</svg>

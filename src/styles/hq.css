@@ -1,0 +1,271 @@
+/* ------------------------------------------------------------------
+ * HQ (src/hq/hq.ts): the 3D loft, labels floating over its zones, a
+ * back button, the zones along the bottom, and the experience panel
+ * (shared with signs.css: .signs__panel and its content).
+ * ------------------------------------------------------------------ */
+
+.hq {
+  overflow: hidden;
+  background: #030303;
+  color: #f4f2ee;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.hq__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.hq__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* a lens: darker corners */
+.hq__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+.hq__head {
+  position: absolute;
+  top: max(20px, 3vh);
+  left: max(20px, 2.4vw);
+  z-index: 1;
+}
+
+.hq__title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(22px, 3vw, 44px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.hq__crumb {
+  margin: 0.6em 0 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.hq__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 7px 14px 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: inherit;
+  font: 500 12px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.hq__back[hidden] { display: none; }
+.hq__back svg { width: 15px; height: 15px; }
+.hq__back:hover,
+.hq__back:focus-visible { border-color: #ff6a00; outline: none; }
+
+/* labels over the zones (overview only) */
+.hq__labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hq__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(12, 12, 14, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: inherit;
+  font: 600 13px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.4s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.hq__label.is-on { opacity: 1; pointer-events: auto; }
+.hq__label.is-hot,
+.hq__label:hover { border-color: #ff6a00; background: rgba(255, 106, 0, 0.2); }
+
+.hq__label-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff6a00;
+  box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.6);
+  animation: hq-pulse 2s ease-out infinite;
+}
+
+@keyframes hq-pulse {
+  70% { box-shadow: 0 0 0 9px rgba(255, 106, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 106, 0, 0); }
+}
+
+.hq__zones {
+  position: absolute;
+  left: 50%;
+  bottom: max(18px, 3vh);
+  display: flex;
+  gap: 8px;
+  translate: -50% 0;
+  transition: opacity 0.4s ease;
+}
+
+.hq__zones button {
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: inherit;
+  font: 500 12px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.hq__zones button:hover,
+.hq__zones button:focus-visible,
+.hq__zones button.is-current { border-color: #ff6a00; background: rgba(255, 106, 0, 0.18); outline: none; }
+
+.hq.is-panel .hq__zones { opacity: 0; pointer-events: none; }
+
+.hq__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(10, 10, 12, 0.8);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.hq__tip.is-on { opacity: 1; }
+
+/* the panel (styles in signs.css) */
+.hq.is-panel .hq__panel {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.3s;
+}
+
+.hq__report {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #ff6a00;
+  color: #111;
+  font: 700 13px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.hq__report:hover,
+.hq__report:focus-visible { background: #ff8a3a; outline: none; }
+
+/* while the textures and models load */
+.hq__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: #030303;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: opacity 0.9s ease, visibility 0.9s;
+}
+
+.hq__loading::after {
+  content: attr(data-progress);
+  position: absolute;
+  top: calc(50% + 18px);
+  opacity: 0.5;
+}
+
+.hq.is-loaded .hq__loading { opacity: 0; visibility: hidden; }
+
+/* ---- the report, in a Safari-style window (src/hq/report.ts) ---- */
+
+.os-window--browser .os-window__titlebar { background: #2a2a2c; border-bottom: 0; }
+.os-window--browser .os-window__body { overflow: hidden; }
+
+.browser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.browser__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 12px 9px;
+  background: #2a2a2c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.browser__nav,
+.browser__actions { display: flex; gap: 6px; color: rgba(255, 255, 255, 0.55); }
+.browser__nav .browser__icon:last-child { opacity: 0.4; }
+
+.browser__icon { display: grid; place-items: center; width: 26px; height: 24px; border-radius: 6px; }
+.browser__icon svg { width: 16px; height: 16px; }
+
+.browser__action { color: inherit; border-radius: 6px; }
+.browser__action:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+.browser__address {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.browser__address span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.browser__address .browser__icon { width: 16px; color: rgba(255, 255, 255, 0.5); }
+.browser__address .browser__icon svg { width: 12px; height: 12px; }
+
+.browser__page {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #525659;
+}

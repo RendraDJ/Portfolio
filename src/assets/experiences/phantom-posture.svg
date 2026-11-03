@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <!-- Phantom Posture: a chest IMU and a webcam, over MQTT, driving the Blender twin -->
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1c1d20" stroke-opacity="0.05" stroke-width="2"/></pattern>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.18"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1c1d20"/></marker>
+  </defs>
+  <rect width="1600" height="1000" fill="#ecebe5"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <!-- the desk, the screen and its webcam -->
+  <path d="M120 640H620M170 640V900M580 640V900" stroke="#1c1d20" stroke-width="8" stroke-linecap="round"/>
+  <path d="M470 330L250 400L280 470z" fill="#5c5d61" fill-opacity="0.14"/>
+  <g filter="url(#sh)">
+    <rect x="450" y="340" width="34" height="230" rx="8" fill="#1c1d20"/>
+    <rect x="490" y="590" width="80" height="50" rx="6" fill="#d5d3cc" stroke="#1c1d20" stroke-width="5"/>
+    <rect x="440" y="300" width="56" height="40" rx="10" fill="#1c1d20"/>
+  </g>
+  <path d="M484 470H530V600" fill="none" stroke="#1c1d20" stroke-width="10"/>
+  <circle cx="468" cy="320" r="10" fill="#c9c8c2"/>
+
+  <!-- the person, slouching -->
+  <g fill="none" stroke="#1c1d20" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M120 560V780M120 770H300" stroke-width="10"/>
+    <path d="M300 760V900" stroke-width="10"/>
+  </g>
+  <path d="M190 730C180 640 196 560 252 500" fill="none" stroke="#1c1d20" stroke-width="80" stroke-linecap="round"/>
+  <path d="M190 730C180 640 196 560 252 500" fill="none" stroke="#d5d3cc" stroke-width="68" stroke-linecap="round"/>
+  <path d="M190 730H350V900" fill="none" stroke="#1c1d20" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M190 730H350V900" fill="none" stroke="#d5d3cc" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M240 540L320 600L440 626" fill="none" stroke="#1c1d20" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M240 540L320 600L440 626" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M262 488L278 470" stroke="#1c1d20" stroke-width="34" stroke-linecap="round"/>
+  <circle cx="296" cy="430" r="54" fill="#fff" stroke="#1c1d20" stroke-width="6"/>
+  <!-- the IMU on the chest -->
+  <rect x="232" y="560" width="44" height="34" rx="8" fill="#5c5d61" stroke="#1c1d20" stroke-width="4" transform="rotate(-30 254 577)"/>
+  <g fill="none" stroke="#5c5d61" stroke-width="4" stroke-linecap="round">
+    <path d="M296 548a40 40 0 0 1 16 40" /><path d="M316 530a66 66 0 0 1 24 68" stroke-opacity="0.5"/>
+  </g>
+  <!-- the reference line, and how far off it is -->
+  <path d="M180 730V420" stroke="#1c1d20" stroke-width="3" stroke-dasharray="6 10" stroke-opacity="0.5"/>
+  <path d="M180 520A210 210 0 0 1 238 530" fill="none" stroke="#5c5d61" stroke-width="4"/>
+  <text x="96" y="500" font-size="22" font-weight="800" fill="#5c5d61" font-family="Menlo, Consolas, monospace">−18°</text>
+
+  <!-- over MQTT -->
+  <g fill="none" stroke="#1c1d20" stroke-width="3" marker-end="url(#ar)">
+    <path d="M340 576C470 520 560 500 640 500"/>
+    <path d="M500 330C560 360 590 430 650 470"/>
+  </g>
+  <g filter="url(#sh)">
+    <rect x="650" y="450" width="240" height="96" rx="48" fill="#1c1d20"/>
+  </g>
+  <text x="770" y="494" text-anchor="middle" font-size="28" font-weight="800" fill="#fff">MQTT</text>
+  <text x="770" y="524" text-anchor="middle" font-size="15" fill="#c9c8c2" font-family="Menlo, Consolas, monospace">posture/spine · head</text>
+  <path d="M890 498H950" stroke="#1c1d20" stroke-width="3" marker-end="url(#ar)"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="15" fill="#1c1d20" fill-opacity="0.6">
+    <text x="660" y="600">→ Telegraf → InfluxDB</text>
+    <text x="660" y="628">→ Grafana · Streamlit</text>
+  </g>
+
+  <!-- the twin -->
+  <g filter="url(#sh)">
+    <rect x="960" y="110" width="540" height="560" rx="30" fill="#1c1d20"/>
+  </g>
+  <text x="1000" y="166" font-size="18" fill="#fff" fill-opacity="0.55" font-family="Menlo, Consolas, monospace" letter-spacing="2">BLENDER TWIN · 7 DOF</text>
+  <g stroke="#fff" stroke-opacity="0.08" stroke-width="2"><path d="M1000 620h460M1060 200v420M1160 200v420M1260 200v420M1360 200v420"/></g>
+  <g fill="none" stroke="#d5d3cc" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1200 610C1192 520 1206 440 1250 380"/>
+    <path d="M1250 380L1258 330"/>
+    <path d="M1180 400L1250 380L1330 396"/>
+    <path d="M1180 400L1150 500L1166 590"/>
+    <path d="M1330 396L1372 490L1360 580"/>
+  </g>
+  <circle cx="1268" cy="280" r="46" fill="none" stroke="#d5d3cc" stroke-width="10"/>
+  <g fill="#5c5d61" stroke="#1c1d20" stroke-width="4">
+    <circle cx="1200" cy="610" r="14"/><circle cx="1214" cy="490" r="14"/><circle cx="1250" cy="380" r="14"/>
+    <circle cx="1258" cy="330" r="12"/><circle cx="1180" cy="400" r="12"/><circle cx="1330" cy="396" r="12"/>
+    <circle cx="1150" cy="500" r="11"/><circle cx="1372" cy="490" r="11"/>
+  </g>
+  <path d="M1200 610V430" stroke="#c9c8c2" stroke-width="3" stroke-dasharray="6 8"/>
+  <path d="M1200 470A140 140 0 0 1 1236 476" fill="none" stroke="#c9c8c2" stroke-width="4"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="17" fill="#fff">
+    <text x="1000" y="250" fill-opacity="0.6">head</text><text x="1000" y="274" font-weight="700" fill="#c9c8c2">yaw 4° · pitch −12°</text>
+    <text x="1000" y="330" fill-opacity="0.6">spine</text><text x="1000" y="354" font-weight="700" fill="#c9c8c2">pitch −18°</text>
+  </g>
+
+  <!-- the live chart -->
+  <g filter="url(#sh)">
+    <rect x="960" y="710" width="540" height="200" rx="30" fill="#5c5d61"/>
+  </g>
+  <text x="1000" y="764" font-size="18" fill="#fff" fill-opacity="0.75" font-family="Menlo, Consolas, monospace" letter-spacing="2">SPINE PITCH · LIVE</text>
+  <path d="M1000 850C1040 846 1070 852 1100 848S1160 844 1190 846 1240 850 1260 830 1300 806 1330 812 1380 820 1460 818" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1000 800H1460" stroke="#fff" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="6 8"/>
+  <text x="1460" y="884" text-anchor="end" font-size="20" font-weight="800" fill="#fff">slouch detected</text>
+</svg>

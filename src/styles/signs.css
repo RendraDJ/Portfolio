@@ -1,0 +1,525 @@
+/* ------------------------------------------------------------------ *
+ * Experiences (see signs/signs.ts): the 3D pole fills the page; a small
+ * title top-left, the experiences' names along the bottom, a tooltip that
+ * follows the pointer, and a detail panel that slides in from the right
+ * (from the bottom on portrait screens) when a sign is opened.
+ * ------------------------------------------------------------------ */
+
+.signs {
+  overflow: hidden;
+  background: #050505;
+  color: #f4f2ee;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.signs__stage {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.signs__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A lens vignette: the frame darkens toward its edges, like a real camera. */
+.signs__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 95% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.signs__head {
+  position: absolute;
+  top: max(20px, 3vh);
+  left: max(20px, 2.4vw);
+  pointer-events: none;
+}
+
+.signs__title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(22px, 3vw, 44px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.signs__hint {
+  margin: 0.6em 0 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+/* The experiences by name, along the bottom (they focus their sign too). */
+.signs__nav {
+  position: absolute;
+  left: 50%;
+  bottom: max(18px, 3vh);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: min(92vw, 760px);
+  translate: -50% 0;
+  transition: opacity 0.4s ease;
+}
+
+.signs__nav button {
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: inherit;
+  font: 500 12px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.signs__nav button:hover,
+.signs__nav button:focus-visible,
+.signs__nav button.is-current {
+  border-color: #ff6a00;
+  background: rgba(255, 106, 0, 0.18);
+  outline: none;
+}
+
+/* Name of the hovered sign, next to the pointer. */
+.signs__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #ff6a00;
+  color: #120700;
+  font: 700 12px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.signs__tip.is-on {
+  opacity: 1;
+}
+
+/* ---- Detail panel ---------------------------------------------------------------------- */
+
+.signs__panel {
+  position: absolute;
+  z-index: 2;
+  top: 90px; /* clears the site's mini player (top right) */
+  right: max(16px, 1.6vw);
+  bottom: max(16px, 2.2vh);
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 46vw);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(14, 14, 16, 0.78);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  translate: 40px 0;
+  transition: opacity 0.45s ease, translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.signs.is-focused .signs__panel {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.35s;
+}
+
+.signs.is-focused .signs__nav {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.signs__panel-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+}
+
+.signs__panel-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.signs__panel-close:hover,
+.signs__panel-close:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+.signs__panel-body {
+  overflow-y: auto;
+  padding: 26px 26px 24px;
+  overscroll-behavior: contain;
+}
+
+.signs__panel-kicker {
+  margin: 0 40px 10px 0;
+  color: #ff8a2a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signs__panel-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.signs__panel-meta,
+.signs__panel-team {
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.signs__panel-team {
+  margin-top: 4px;
+}
+
+.signs__panel-summary {
+  margin: 18px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.signs__panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+.signs__panel-list li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.signs__panel-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: #ff6a00;
+  rotate: 45deg;
+}
+
+.signs__panel-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signs__panel-stack li {
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+}
+
+.signs__panel-note {
+  margin: 18px 0 0;
+  padding: 10px 12px;
+  border-left: 2px solid #ff6a00;
+  font-size: 12.5px;
+  line-height: 1.45;
+  opacity: 0.7;
+}
+
+/* ---- Portrait screens: the panel is a bottom sheet ------------------------------------ */
+
+@media (max-aspect-ratio: 1 / 1) {
+  .signs__panel {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 76px; /* clears the site's "Home" button */
+    width: auto;
+    height: 52%;
+    translate: 0 40px;
+  }
+
+  .signs.is-focused .signs__panel {
+    translate: 0 0;
+  }
+
+  .signs__head {
+    top: 84px; /* under the compact mini player */
+  }
+
+  .signs__nav {
+    bottom: 76px; /* clears the site's "Home" button */
+  }
+}
+
+/* ---- live demo inside the panel (see src/signs/demos.ts) ---- */
+
+.demo {
+  container-type: inline-size;
+  margin: 18px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #0b0b0d;
+}
+
+.demo__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.demo__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3b1f;
+  box-shadow: 0 0 8px #ff3b1f;
+  animation: demo-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes demo-blink {
+  50% { opacity: 0.25; }
+}
+
+.demo__note {
+  margin-left: auto;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.5;
+}
+
+.demo__screen {
+  position: relative;
+  aspect-ratio: 400 / 250;
+}
+
+.demo__screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.demo__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.demo__btn {
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.demo__btn:hover,
+.demo__btn:focus-visible { background: rgba(255, 255, 255, 0.14); outline: none; }
+.demo__btn.is-on { border-color: #ff6a00; color: #ffb27a; }
+.demo__btn:disabled { opacity: 0.6; cursor: default; }
+
+.demo__range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 6px;
+  font-size: 11.5px;
+}
+
+.demo__range input { width: 110px; accent-color: #ff6a00; }
+
+.demo__status { margin-left: auto; font-size: 11px; opacity: 0.55; }
+
+.demo__caption {
+  margin: 0;
+  padding: 0 12px 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  opacity: 0.62;
+}
+
+/* The Classifier: an HTML mailbox rather than a canvas */
+.demo__screen--dom {
+  aspect-ratio: auto;
+  height: calc(100cqw * 250 / 400);
+  min-height: 250px;
+}
+
+.mail {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  height: 100%;
+  font-size: 10.5px;
+}
+
+.mail__inbox {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  list-style: none;
+}
+
+.mail__inbox li {
+  display: grid;
+  gap: 2px;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  animation: mail-in 0.4s ease-out;
+}
+
+@keyframes mail-in {
+  from { opacity: 0; translate: 0 -8px; }
+}
+
+.mail__inbox li:hover { background: rgba(255, 255, 255, 0.04); }
+.mail__inbox li.is-open { background: rgba(255, 106, 0, 0.1); }
+.mail__from { opacity: 0.5; font-size: 9.5px; }
+.mail__subj { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+
+.mail__chip {
+  justify-self: start;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(74, 222, 128, 0.14);
+  color: #9ff0bd;
+  font-size: 9.5px;
+}
+
+.mail__chip.is-low { background: rgba(255, 190, 60, 0.16); color: #ffd27a; }
+.mail__chip.is-fixed { background: rgba(90, 180, 255, 0.16); color: #bfe0ff; }
+
+.mail__side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 10px;
+  overflow: hidden;
+}
+
+.mail__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mail__steps li {
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-size: 9px;
+  opacity: 0.55;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.mail__steps li.is-on { background: #ff6a00; border-color: #ff6a00; color: #111; opacity: 1; }
+.mail__steps li.is-on.is-skip { background: transparent; color: inherit; opacity: 0.3; text-decoration: line-through; }
+
+.mail__open { display: grid; gap: 4px; min-height: 0; }
+.mail__open p { margin: 0; }
+.mail__subject { font-weight: 700; }
+.mail__body { opacity: 0.8; line-height: 1.4; }
+.mail__sig { opacity: 0.4; text-decoration: line-through; }
+.mail__ai { opacity: 0.55; font-size: 9.5px; }
+
+.mail__open select {
+  width: 100%;
+  padding: 3px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  background: #16171b;
+  color: inherit;
+  font: inherit;
+  font-size: 10px;
+}
+
+.mail__counts {
+  display: grid;
+  gap: 2px;
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mail__counts li {
+  display: grid;
+  grid-template-columns: 7.5em 1fr 1.5em;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+}
+
+.mail__counts span { opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mail__counts i { height: 4px; border-radius: 2px; background: #ff6a00; transition: width 0.3s; }
+.mail__counts b { text-align: right; font-weight: 600; }
+
+@container (max-width: 420px) {
+  .demo__screen--dom { height: auto; }
+  .mail { grid-template-columns: 1fr; }
+  .mail__inbox { max-height: 190px; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+}

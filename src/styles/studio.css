@@ -1,0 +1,160 @@
+/* ------------------------------------------------------------------ *
+ * The studio around every section: a monitor in a dark room (see os/studio.ts).
+ *
+ * Everything is placed from the monitor's screen: --sx / --sy (its top-left
+ * corner) and --ss (its scale; it keeps the page's proportions, so it is
+ * --ss × 100vw wide and --ss × 100vh tall). --b is the bezel.
+ * ------------------------------------------------------------------ */
+
+.in-studio {
+  --b: 0.55vw;
+  --screen-w: calc(100vw * var(--ss, 1));
+  --screen-h: calc(100vh * var(--ss, 1));
+}
+
+.in-studio.has-room {
+  background: #040405 !important;
+}
+
+/* The section itself, at full page size — scaled into the monitor by
+   studio.ts. It keeps the section's own layout (the section is now the room). */
+.studio__screen {
+  position: absolute;
+  inset: 0;
+  display: inherit;
+  flex-direction: inherit;
+  justify-content: inherit;
+  align-items: inherit;
+  gap: inherit;
+  padding: inherit;
+  overflow: inherit;
+  isolation: isolate;
+}
+
+.in-studio.has-room .studio__screen {
+  border-radius: calc(4px / var(--ss));
+}
+
+.studio__room,
+.studio__room-front {
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+
+.in-studio.has-room .studio__room,
+.in-studio.has-room .studio__room-front {
+  display: block;
+}
+
+.studio__room-front {
+  z-index: 3;
+}
+
+.studio__room > *,
+.studio__room-front > * {
+  position: absolute;
+}
+
+/* ---- Wall: hexagonal acoustic panels, lit from the lamp ---------------------------- */
+
+.room__wall {
+  inset: -2vh -2vw 0;
+  background:
+    /* the lamp's light spilling onto the wall above the monitor */
+    radial-gradient(60vw 22vh at 50% calc(var(--sy) - 2vh), rgba(255, 252, 240, 0.04), transparent 70%),
+    /* darker corners */
+    radial-gradient(140% 110% at 50% 40%, transparent 30%, rgba(0, 0, 0, 0.9) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='173.2' height='300' viewBox='0 0 173.2 300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%230c0c0e'/%3E%3Cstop offset='1' stop-color='%23060607'/%3E%3C/linearGradient%3E%3Cpolygon id='h' points='0,-95 82.3,-47.5 82.3,47.5 0,95 -82.3,47.5 -82.3,-47.5' fill='url(%23g)' stroke='%23141416' stroke-width='2'/%3E%3C/defs%3E%3Cuse href='%23h' x='86.6' y='100'/%3E%3Cuse href='%23h' x='0' y='250'/%3E%3Cuse href='%23h' x='173.2' y='250'/%3E%3Cuse href='%23h' x='0' y='-50'/%3E%3Cuse href='%23h' x='173.2' y='-50'/%3E%3C/svg%3E")
+      center top / 14vw auto,
+    #040405;
+}
+
+/* foam texture over the panels */
+.room__wall::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Desk, stand, monitor ----------------------------------------------------------- */
+
+.room__desk {
+  left: -2vw;
+  right: -2vw;
+  top: calc(var(--sy) + var(--screen-h) + 8vh);
+  bottom: -4vh;
+  background: linear-gradient(#0a0a0b, #040404 40%, #010101);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.room__stand {
+  left: calc(50vw - 2.6vw);
+  top: calc(var(--sy) + var(--screen-h));
+  width: 5.2vw;
+  height: 8.6vh;
+  background: linear-gradient(90deg, #121214, #2a2b2f 45%, #141416);
+}
+
+.room__foot {
+  position: absolute;
+  left: 50%;
+  bottom: -1.2vh;
+  width: 18vw;
+  height: 2vh;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #2b2c30, #101012 80%, transparent);
+}
+
+.room__monitor {
+  left: calc(var(--sx) - var(--b));
+  top: calc(var(--sy) - var(--b));
+  width: calc(var(--screen-w) + var(--b) * 2);
+  height: calc(var(--screen-h) + var(--b) * 2);
+  border-radius: 0.5vw;
+  background: #050506;
+  box-shadow:
+    0 0 0 1px #2b2c30,
+    0 3vh 8vh rgba(0, 0, 0, 0.8);
+}
+
+/* ---- In front: glare on the glass, the lamp ------------------------------ */
+
+.room__glare {
+  left: var(--sx);
+  top: var(--sy);
+  width: var(--screen-w);
+  height: var(--screen-h);
+  border-radius: 4px;
+  background: linear-gradient(rgba(255, 255, 250, 0.1), transparent 22%);
+}
+
+/* the light bar clipped on top of the monitor */
+.room__lamp {
+  left: calc(50vw - 24vw);
+  top: calc(var(--sy) - var(--b) - 2.4vh);
+  width: 48vw;
+  height: 1.5vh;
+  border-radius: 0.6vh;
+  background: linear-gradient(#36373b, #141416);
+  box-shadow:
+    0 0.35vh 0 0 rgba(255, 255, 248, 0.95),
+    0 0.6vh 1.6vh 0.2vh rgba(255, 255, 240, 0.55),
+    0 2vh 9vh 1vh rgba(255, 255, 235, 0.22);
+}
+
+.room__lamp-clip {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2.6vw;
+  height: 2.2vh;
+  translate: -50% 0;
+  border-radius: 0 0 0.3vw 0.3vw;
+  background: linear-gradient(#2c2d31, #18181b);
+}

@@ -1,0 +1,1235 @@
+/* ------------------------------------------------------------------ *
+ * The Xandvar phone (see brand/phone.ts): a CSS-3D iPhone standing on
+ * the right of the brand scene. Everything inside is laid out at a real
+ * iPhone's logical size — a 390×844 screen in a 414×868 body — and the
+ * whole device is then scaled by --phone-scale (set from JS to fit the
+ * viewport), so the UI keeps true phone proportions at any window size.
+ *
+ *   .phone          positioned box at the *scaled* size; GSAP entrance
+ *   .phone__scaler  scales the fixed-size device; holds the perspective
+ *   .phone__body    the 3D object — GSAP rotates it (tilt), preserve-3d
+ * ------------------------------------------------------------------ */
+
+.phone {
+  --phone-scale: 0.8;
+  --phone-w: calc(414px * var(--phone-scale));
+  --phone-h: calc(868px * var(--phone-scale));
+  position: absolute;
+  z-index: 3;
+  right: clamp(20px, 4.5vw, 72px);
+  /* centred in the space below the menu bar (no CSS translate: GSAP owns this
+     element's transform for the entrance — see the note on .brand__wordmark) */
+  top: calc(50% + var(--brand-menubar-h, 30px) / 2 - var(--phone-h) / 2);
+  width: var(--phone-w);
+  height: var(--phone-h);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', var(--font-sans);
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Soft contact shadow on the "floor" under the device. */
+.phone::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 12%;
+  right: 12%;
+  bottom: -5%;
+  height: 7%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.phone__scaler {
+  width: 414px;
+  height: 868px;
+  transform: scale(var(--phone-scale));
+  transform-origin: 0 0;
+  perspective: 1800px;
+}
+
+.phone__body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* The device's side, seen when it's turned toward the hero: a plane hinged on
+   the right edge and folded back 90° into the scene — thickness, faked. */
+.phone__edge {
+  position: absolute;
+  top: 64px;
+  bottom: 64px;
+  left: calc(100% - 1px);
+  width: 15px;
+  transform-origin: left center;
+  transform: rotateY(90deg);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #56565b, #2a2a2e 18%, #6e6e74 46%, #2c2c30 74%, #5e5e63);
+}
+
+/* Titanium band (the frame's own background, 3px wide) around a black bezel. */
+.phone__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 66px;
+  background: linear-gradient(135deg, #9a9aa0, #3a3a3e 26%, #8d8d93 52%, #2f2f33 78%, #7c7c82);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55), 0 12px 24px rgba(0, 0, 0, 0.45);
+}
+
+.phone__screen {
+  position: absolute;
+  inset: 12px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 54px;
+  background: #000;
+  box-shadow: 0 0 0 9px #060607;
+  user-select: none;
+}
+
+/* A light sweep across the glass; phone.ts slides it as the phone turns. */
+.phone__glare {
+  position: absolute;
+  inset: 0 -60%;
+  z-index: 50;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.09) 46%, rgba(255, 255, 255, 0.02) 54%, transparent 62%);
+}
+
+.phone button {
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.phone__wallpaper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5) contrast(1.1);
+  pointer-events: none;
+}
+
+/* ---- Status bar + Dynamic Island ------------------------------------------ */
+
+.phone__status {
+  position: absolute;
+  z-index: 40;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 30px 0 44px;
+  font-size: 17px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.phone[data-view='lock'] .phone__status-time {
+  visibility: hidden; /* the lock screen shows its own big clock */
+}
+
+.phone__island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  width: 124px;
+  height: 36px;
+  margin-left: -62px;
+  border-radius: 20px;
+  background: #000;
+}
+
+.phone__status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phone__status-icons svg {
+  height: 13px;
+  width: auto;
+}
+
+.phone__status-icons svg:nth-child(2) {
+  height: 17px;
+}
+
+/* ---- Views (lock, home, apps) ------------------------------------------------ */
+
+.phone__view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 54px;
+  visibility: hidden; /* phone.ts reveals the active one (GSAP autoAlpha) */
+}
+
+.phone-app {
+  background: #000;
+}
+
+/* ---- Lock screen ---------------------------------------------------------------- */
+
+.phone__lock {
+  align-items: center;
+  padding-inline: 14px;
+  cursor: pointer;
+}
+
+.phone__lock-date {
+  margin: 14px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.phone__lock-time {
+  margin: -6px 0 0;
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.phone__notifs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 22px;
+}
+
+.phone__unlock {
+  margin: 14px 0 40px;
+  padding: 6px 14px;
+  border: 0;
+  background: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  animation: phone-unlock-hint 2.4s ease-in-out infinite;
+}
+
+@keyframes phone-unlock-hint {
+  0%, 100% { opacity: 0.45; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* ---- Notification cards (lock screen stack + the in-app banner) ---------------- */
+
+.phone__notif,
+.phone__banner {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 22px;
+  background: rgba(45, 45, 50, 0.62);
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  text-align: left;
+}
+
+.phone__banner {
+  position: absolute;
+  z-index: 45;
+  top: 58px;
+  left: 10px;
+  width: calc(100% - 20px);
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.phone__banner-icon {
+  position: relative;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: #34c759;
+}
+
+.phone__banner-icon::after {
+  content: '';
+  position: absolute;
+  inset: 9px 7px 11px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.phone__banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.phone__banner-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.phone__banner-top > span {
+  flex: none;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.phone__banner-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---- Now-playing widgets + shared controls (lock, home, Music app) ------------- */
+
+.np-widget {
+  width: 100%;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(40, 40, 46, 0.55);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  text-align: left;
+}
+
+.np-widget--lock {
+  margin-top: auto;
+  padding: 14px 16px 10px;
+  cursor: default;
+}
+
+.np-widget__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.np-widget__art {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.np-widget__meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.np-widget__meta > * {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.np-widget__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1ed760;
+}
+
+.np-widget__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.np-widget__artist {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.np-widget__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.np-widget__progress .np-bar {
+  flex: 1;
+}
+
+.np-bar {
+  position: relative;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+}
+
+.np-bar-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+}
+
+.np-bar-handle {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.np-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 8px 0 2px;
+}
+
+.np-controls button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.np-controls button:active {
+  transform: scale(0.88);
+}
+
+.np-prev svg,
+.np-next svg {
+  width: 26px;
+  height: 26px;
+}
+
+.np-play svg {
+  width: 34px;
+  height: 34px;
+}
+
+.np-icon-pause,
+.np-play.is-playing .np-icon-play {
+  display: none;
+}
+
+.np-play.is-playing .np-icon-pause {
+  display: block;
+}
+
+.np-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  flex: none;
+  height: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.is-music-playing .np-eq {
+  opacity: 1;
+}
+
+.np-eq i {
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: #1ed760;
+  transform-origin: bottom;
+  animation: phone-eq 0.85s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.is-music-playing .np-eq i {
+  animation-play-state: running;
+}
+
+.np-eq i:nth-child(1) { animation-delay: -0.5s; }
+.np-eq i:nth-child(2) { animation-delay: -0.2s; }
+.np-eq i:nth-child(3) { animation-delay: -0.7s; }
+
+@keyframes phone-eq {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+
+/* The YouTube player itself: present (it has to be, to play) but invisible. */
+.np-yt {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Home screen ------------------------------------------------------------------ */
+
+.phone__home {
+  padding: 70px 22px 0;
+}
+
+.np-widget--home {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  cursor: pointer;
+}
+
+.np-widget--home .np-widget__art {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+}
+
+/* A photo widget of the brand, like iOS's Photos widget — opens the story (Notes). */
+.phone__photo-widget {
+  position: relative;
+  height: 196px;
+  margin-top: 16px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 24px;
+  background: #111;
+  cursor: pointer;
+}
+
+.phone__photo-widget img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: grayscale(1) contrast(1.1);
+}
+
+.phone__photo-widget-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 16px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  text-align: left;
+}
+
+.phone__photo-widget-caption strong {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.phone__photo-widget-caption span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.phone__photo-widget:focus-visible {
+  outline: 3px solid #0a84ff;
+  outline-offset: 3px;
+}
+
+.phone__apps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px 0;
+  margin-top: 26px;
+}
+
+.phone__app-icon {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.phone__app-icon:active {
+  transform: scale(0.9);
+}
+
+.phone__app-icon svg {
+  width: 62px;
+  height: 62px;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.phone__app-icon:focus-visible svg,
+.np-widget--home:focus-visible {
+  outline: 3px solid #0a84ff;
+  outline-offset: 3px;
+}
+
+.phone__dock {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  height: 94px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 36px;
+  background: rgba(60, 60, 66, 0.45);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+}
+
+.phone__badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 12px;
+  background: #ff3b30;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+}
+
+.phone__badge[hidden] {
+  display: none;
+}
+
+/* ---- Home indicator: tap to go home (or back to the lock screen from home) ---- */
+
+.phone__homebar {
+  position: absolute;
+  z-index: 46;
+  bottom: 8px;
+  left: 50%;
+  width: 140px;
+  height: 5px;
+  margin-left: -70px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* a comfortable hit area around the thin bar */
+.phone__homebar::before {
+  content: '';
+  position: absolute;
+  inset: -14px -24px;
+}
+
+.phone__homebar:hover {
+  opacity: 1;
+  transform: scaleX(1.08);
+}
+
+/* ---- App chrome ------------------------------------------------------------------------ */
+
+.phone-app__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  font-size: 17px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.phone-app__bar-logo {
+  width: 22px;
+  height: 22px;
+}
+
+.phone-app__bar--notes {
+  justify-content: flex-start;
+  padding-inline: 16px;
+  border-bottom: 0;
+}
+
+.phone-app__crumb {
+  font-size: 17px;
+  font-weight: 400;
+  color: #0a84ff;
+}
+
+.phone-app__bar--notes .phone-app__crumb {
+  color: #ffd60a;
+}
+
+.phone-app__large-title {
+  flex: none;
+  padding: 8px 20px 10px;
+}
+
+.phone-app__large-title h3 {
+  margin: 4px 0 0;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Everything that scrolls inside the phone (pages.ts leaves these alone). */
+.phone [data-own-scroll],
+.phone-app__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+.phone [data-own-scroll]::-webkit-scrollbar,
+.phone-app__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Music --------------------------------------------------------------------------- */
+
+.music {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 26px 30px 44px;
+  background: linear-gradient(180deg, #2a2a2e, #000 70%);
+}
+
+.music__art {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
+}
+
+.music__meta {
+  margin: 28px 0 22px;
+}
+
+.music__meta p {
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.music__title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.music__artist {
+  margin-top: 4px !important;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.music__bar .np-bar-fill {
+  background: #1ed760;
+}
+
+.music__times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.music__controls {
+  gap: 48px;
+  margin-top: 14px;
+}
+
+.music__controls .np-play {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+}
+
+.music__controls .np-play svg {
+  width: 30px;
+  height: 30px;
+}
+
+.music__controls .np-prev svg,
+.music__controls .np-next svg {
+  width: 30px;
+  height: 30px;
+}
+
+.music__note {
+  margin: auto 0 0;
+  font-size: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Messages (the self-playing thread — base styles live in brand.css) -------------- */
+
+.phone-app--messages .brand__messages-header {
+  flex: none;
+  min-height: 58px;
+  gap: 10px;
+  padding: 6px 16px 10px;
+}
+
+.phone-app--messages .brand__messages-back svg {
+  width: 26px;
+  height: 26px;
+}
+
+.phone-app--messages .brand__messages-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+}
+
+.phone-app--messages .brand__messages-name {
+  font-size: 17px;
+}
+
+.phone-app--messages .brand__messages-title {
+  margin-right: 0;
+  font-size: 17px;
+}
+
+.phone-app--messages .brand__messages-thread,
+.phone-app--messages .brand__messages-list {
+  min-height: 0;
+  max-height: none;
+}
+
+.phone-app--messages .brand__messages-thread {
+  gap: 6px;
+  padding: 14px 14px 40px;
+}
+
+.phone-app--messages .brand__messages-bubble {
+  max-width: 76%;
+  padding: 9px 15px;
+  border-radius: 20px;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.phone-app--messages .brand__messages-typing {
+  padding: 12px 15px;
+  border-radius: 20px;
+  gap: 4px;
+}
+
+.phone-app--messages .brand__messages-typing span {
+  width: 8px;
+  height: 8px;
+}
+
+.phone-app--messages .brand__messages-row {
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.phone-app--messages .brand__messages-row-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+.phone-app--messages .brand__messages-row-name {
+  font-size: 16px;
+}
+
+.phone-app--messages .brand__messages-row-time {
+  font-size: 14px;
+}
+
+.phone-app--messages .brand__messages-row-snippet {
+  font-size: 15px;
+}
+
+/* The demo's "finger": a translucent touch dot instead of a mouse pointer. */
+.phone-app--messages .brand__messages-cursor {
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  filter: none;
+}
+
+/* ---- Instagram ------------------------------------------------------------------------ */
+
+.phone-app--instagram {
+  display: flex;
+}
+
+.ig {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  font-size: 14px;
+}
+
+.ig__topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 16px;
+}
+
+.ig__topbar svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.ig__topbar svg:last-child {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+}
+
+.ig__handle {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.ig__head {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 8px 16px 12px;
+}
+
+.ig__avatar {
+  flex: none;
+  width: 86px;
+  height: 86px;
+  padding: 14px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #0c0c0c;
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px #d6249f;
+}
+
+.ig__stats {
+  display: flex;
+  justify-content: space-around;
+  flex: 1;
+}
+
+.ig__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 13px;
+}
+
+.ig__stat strong {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.ig__name,
+.ig__bio,
+.ig__mutual {
+  margin: 0;
+  padding: 0 16px;
+}
+
+.ig__name {
+  font-weight: 600;
+}
+
+.ig__bio {
+  margin-top: 2px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ig__mutual {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #a8a8a8;
+}
+
+.ig__actions {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 4px;
+}
+
+.ig__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  height: 34px;
+  border-radius: 8px;
+  background: #262626;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5f5f5;
+  text-decoration: none;
+}
+
+.ig__btn--open {
+  flex: none;
+  padding: 0 14px;
+  background: #0095f6;
+}
+
+.ig__btn--open:hover,
+.ig__btn--open:focus-visible {
+  background: #1877f2;
+}
+
+.ig__btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ig__tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  border-top: 1px solid #262626;
+}
+
+.ig__tab {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  padding: 10px 0;
+  margin-top: -1px;
+  border-top: 1px solid transparent;
+  color: #a8a8a8;
+}
+
+.ig__tab.is-active {
+  border-top-color: #f5f5f5;
+  color: #f5f5f5;
+}
+
+.ig__tab svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ig__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding-bottom: 30px;
+}
+
+.ig__grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ---- Files (Blueprints) ------------------------------------------------------------- */
+
+.files__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.files__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.files__row:hover,
+.files__row:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.files__icon {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+.files__meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.files__name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.files__detail {
+  margin-top: 2px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.files__chevron {
+  flex: none;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.files__hint {
+  margin: 18px 0 0;
+  font-size: 13px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---- Notes (the brand story) ----------------------------------------------------------- */
+
+.notes {
+  padding: 4px 22px 60px;
+  font-size: 17px;
+  line-height: 1.45;
+  user-select: text;
+}
+
+.notes__date {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.notes__title {
+  margin: 10px 0 12px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.notes p {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.notes__heading {
+  margin: 20px 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.notes__checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notes__checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.notes__checklist li::before {
+  content: '✓';
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffd60a;
+  font-size: 13px;
+  font-weight: 800;
+  color: #000;
+}
+
+/* ---- Narrow / portrait screens: the phone joins the stacked page (brand.css) ---------- */
+
+@media (max-aspect-ratio: 1 / 1), (max-height: 480px) {
+  .phone {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex: none;
+  }
+}
