@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <!-- Convergence: the UR10 driving its tool along a straight line onto the target, the error dying out -->
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1c1d20" stroke-opacity="0.05" stroke-width="2"/></pattern>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.18"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5c5d61"/></marker>
+  </defs>
+  <rect width="1600" height="1000" fill="#ecebe5"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <!-- the table -->
+  <path d="M120 890h880" stroke="#1c1d20" stroke-width="6" stroke-linecap="round"/>
+  <g fill="#1c1d20" fill-opacity="0.18"><circle cx="200" cy="918" r="6"/><circle cx="280" cy="918" r="6"/><circle cx="360" cy="918" r="6"/><circle cx="440" cy="918" r="6"/><circle cx="520" cy="918" r="6"/><circle cx="600" cy="918" r="6"/><circle cx="680" cy="918" r="6"/><circle cx="760" cy="918" r="6"/><circle cx="840" cy="918" r="6"/><circle cx="920" cy="918" r="6"/></g>
+
+  <!-- earlier poses, fading: the arm converging -->
+  <g fill="none" stroke="#1c1d20" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M330 760V640L520 420 800 400 860 470 880 560" stroke-width="22" stroke-opacity="0.06"/>
+    <path d="M330 760V640L560 410 830 450 880 530 890 620" stroke-width="22" stroke-opacity="0.1"/>
+  </g>
+
+  <!-- the planned straight line, start to target -->
+  <path d="M880 560L905 700" fill="none" stroke="#5c5d61" stroke-width="4" stroke-dasharray="3 12" stroke-linecap="round"/>
+  <circle cx="880" cy="560" r="9" fill="#ecebe5" stroke="#5c5d61" stroke-width="4"/>
+
+  <!-- the arm -->
+  <g filter="url(#sh)">
+    <rect x="262" y="836" width="136" height="54" rx="8" fill="#1c1d20"/>
+    <rect x="290" y="740" width="80" height="100" rx="14" fill="#d5d3cc" stroke="#1c1d20" stroke-width="5"/>
+    <path d="M330 690L600 430" stroke="#1c1d20" stroke-width="66" stroke-linecap="round"/>
+    <path d="M330 690L600 430" stroke="#d5d3cc" stroke-width="56" stroke-linecap="round"/>
+    <path d="M600 430L860 520" stroke="#1c1d20" stroke-width="54" stroke-linecap="round"/>
+    <path d="M600 430L860 520" stroke="#d5d3cc" stroke-width="44" stroke-linecap="round"/>
+    <path d="M860 520L900 620" stroke="#1c1d20" stroke-width="44" stroke-linecap="round"/>
+    <path d="M860 520L900 620" stroke="#d5d3cc" stroke-width="34" stroke-linecap="round"/>
+  </g>
+  <g stroke="#1c1d20" stroke-width="5">
+    <circle cx="330" cy="700" r="56" fill="#fff"/><circle cx="330" cy="700" r="28" fill="#5c5d61"/>
+    <circle cx="600" cy="430" r="48" fill="#fff"/><circle cx="600" cy="430" r="24" fill="#5c5d61"/>
+    <circle cx="860" cy="520" r="38" fill="#fff"/><circle cx="860" cy="520" r="18" fill="#5c5d61"/>
+    <circle cx="900" cy="620" r="30" fill="#fff"/><circle cx="900" cy="620" r="13" fill="#5c5d61"/>
+  </g>
+  <!-- the gripper -->
+  <g fill="none" stroke="#1c1d20" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M887 660l-14 44M915 656l12 44"/>
+  </g>
+
+  <!-- the target, with its frame -->
+  <g fill="none" stroke="#5c5d61" stroke-width="5" stroke-linecap="round">
+    <circle cx="905" cy="728" r="22"/>
+    <path d="M905 690v76M867 728h76"/>
+  </g>
+  <g stroke-width="4" stroke-linecap="round">
+    <path d="M905 728h96" stroke="#1c1d20" marker-end="url(#ar)"/>
+    <path d="M905 728v-0" />
+  </g>
+  <text x="1012" y="734" font-size="20" font-family="Menlo, Consolas, monospace" fill="#1c1d20">x_d</text>
+  <text x="790" y="780" font-size="20" font-family="Menlo, Consolas, monospace" fill="#5c5d61">target</text>
+
+  <!-- the error dying out -->
+  <g filter="url(#sh)">
+    <rect x="1080" y="150" width="420" height="330" rx="30" fill="#1c1d20"/>
+  </g>
+  <text x="1120" y="206" font-size="18" fill="#fff" fill-opacity="0.55" font-family="Menlo, Consolas, monospace" letter-spacing="2">POSE ERROR ‖e(t)‖</text>
+  <path d="M1120 250v170h340" fill="none" stroke="#fff" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M1120 260C1170 260 1190 360 1240 395S1360 418 1460 420" fill="none" stroke="#c9c8c2" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1250 250v170" stroke="#c9c8c2" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="4 8"/>
+  <text x="1262" y="300" font-size="34" font-weight="800" fill="#fff">≈ 2 s</text>
+  <text x="1120" y="456" font-size="17" fill="#fff" fill-opacity="0.75" font-family="Menlo, Consolas, monospace">Kp = 16 · λ = 0.001</text>
+
+  <!-- the law -->
+  <g filter="url(#sh)">
+    <rect x="1080" y="540" width="420" height="200" rx="30" fill="#5c5d61"/>
+  </g>
+  <text x="1120" y="598" font-size="18" fill="#fff" fill-opacity="0.75" font-family="Menlo, Consolas, monospace" letter-spacing="2">CONTROL LAW</text>
+  <text x="1120" y="660" font-size="36" font-weight="800" fill="#fff" font-family="Menlo, Consolas, monospace">q̇ = J⁺ (ẋ_d + K·e)</text>
+  <text x="1120" y="704" font-size="18" fill="#fff" fill-opacity="0.8">damped pseudo-inverse · 6 DOF UR10</text>
+</svg>

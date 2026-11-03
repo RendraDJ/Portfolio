@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <!-- PalletLens: the drone flying a rack in serpentine order, aligned on a tag, reading it -->
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#1c1d20" stroke-opacity="0.05" stroke-width="2"/></pattern>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.18"/></filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5c5d61"/></marker>
+    <g id="box">
+      <rect width="120" height="92" rx="6" fill="#d5d3cc" stroke="#1c1d20" stroke-width="4"/>
+      <path d="M0 30h120" stroke="#1c1d20" stroke-width="3" stroke-opacity="0.35"/>
+      <rect x="30" y="44" width="60" height="34" rx="3" fill="#fff" stroke="#1c1d20" stroke-width="2.5"/>
+      <path d="M38 52v18M42 52v18M47 52v18M50 52v18M55 52v18M60 52v18M63 52v18M68 52v18M72 52v18M77 52v18M82 52v18" stroke="#1c1d20" stroke-width="2"/>
+    </g>
+  </defs>
+  <rect width="1600" height="1000" fill="#ecebe5"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <!-- the rack: 3 levels × 4 slots -->
+  <g stroke="#1c1d20" stroke-width="8" stroke-linecap="round">
+    <path d="M110 120V930M1010 120V930"/>
+    <path d="M110 380H1010M110 640H1010M110 900H1010"/>
+  </g>
+  <g stroke="#1c1d20" stroke-width="3" stroke-opacity="0.3"><path d="M335 140V900M560 140V900M785 140V900"/></g>
+  <g font-family="Menlo, Consolas, monospace" font-size="18" fill="#1c1d20" fill-opacity="0.55">
+    <text x="130" y="160">A1</text><text x="355" y="160">A2</text><text x="580" y="160">A3</text><text x="805" y="160">A4</text>
+    <text x="130" y="420">B1</text><text x="355" y="420">B2</text><text x="580" y="420">B3</text><text x="805" y="420">B4</text>
+    <text x="130" y="680">C1</text><text x="355" y="680">C2</text><text x="580" y="680">C3</text><text x="805" y="680">C4</text>
+  </g>
+  <use href="#box" x="162" y="282"/><use href="#box" x="387" y="282"/><use href="#box" x="837" y="282"/>
+  <use href="#box" x="162" y="542"/><use href="#box" x="612" y="542"/><use href="#box" x="837" y="542"/>
+  <use href="#box" x="162" y="802"/><use href="#box" x="387" y="802"/><use href="#box" x="612" y="802"/><use href="#box" x="837" y="802"/>
+  <!-- done: ticks -->
+  <g fill="#5c5d61"><circle cx="290" cy="186" r="16"/><circle cx="515" cy="186" r="16"/><circle cx="740" cy="186" r="16"/><circle cx="965" cy="186" r="16"/><circle cx="965" cy="446" r="16"/></g>
+  <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M282 186l6 6 10-11M507 186l6 6 10-11M732 186l6 6 10-11M957 186l6 6 10-11M957 446l6 6 10-11"/>
+  </g>
+
+  <!-- the serpentine path -->
+  <path d="M220 230H900Q960 230 960 290V470Q960 500 900 500H700" fill="none" stroke="#5c5d61" stroke-width="5" stroke-dasharray="4 14" stroke-linecap="round"/>
+  <path d="M640 500H240Q190 500 190 560V740Q190 760 240 760H900" fill="none" stroke="#1c1d20" stroke-opacity="0.25" stroke-width="4" stroke-dasharray="4 14" stroke-linecap="round"/>
+
+  <!-- the drone, aligned on B3 -->
+  <path d="M672 470L612 586L732 586z" fill="#5c5d61" fill-opacity="0.16"/>
+  <g transform="translate(672 450)" filter="url(#sh)">
+    <path d="M-120 -8h240" stroke="#1c1d20" stroke-width="10" stroke-linecap="round"/>
+    <rect x="-56" y="-26" width="112" height="44" rx="18" fill="#1c1d20"/>
+    <circle cx="0" cy="22" r="14" fill="#5c5d61" stroke="#1c1d20" stroke-width="4"/>
+    <ellipse cx="-120" cy="-18" rx="62" ry="10" fill="#d5d3cc" stroke="#1c1d20" stroke-width="4"/>
+    <ellipse cx="120" cy="-18" rx="62" ry="10" fill="#d5d3cc" stroke="#1c1d20" stroke-width="4"/>
+    <circle cx="-120" cy="-18" r="7" fill="#1c1d20"/><circle cx="120" cy="-18" r="7" fill="#1c1d20"/>
+  </g>
+  <!-- the aim on the tag -->
+  <g fill="none" stroke="#5c5d61" stroke-width="5" stroke-linecap="round">
+    <path d="M634 580h-14v14M710 580h14v14M634 628h-14v-14M710 628h14v-14"/>
+  </g>
+
+  <!-- what the camera reads -->
+  <g filter="url(#sh)">
+    <rect x="1090" y="140" width="420" height="440" rx="30" fill="#1c1d20"/>
+  </g>
+  <text x="1130" y="196" font-size="18" fill="#fff" fill-opacity="0.55" font-family="Menlo, Consolas, monospace" letter-spacing="2">CAM0 · 20° · SLOT B3</text>
+  <rect x="1130" y="224" width="340" height="150" rx="10" fill="#fff"/>
+  <path d="M1150 244v60M1156 244v60M1164 244v60M1168 244v60M1176 244v60M1184 244v60M1188 244v60M1196 244v60M1202 244v60M1210 244v60M1216 244v60M1224 244v60M1230 244v60M1238 244v60" stroke="#1c1d20" stroke-width="3"/>
+  <text x="1150" y="350" font-size="40" font-weight="800" fill="#1c1d20" font-family="Menlo, Consolas, monospace">B DEP 010.02</text>
+  <rect x="1142" y="314" width="316" height="50" rx="6" fill="none" stroke="#5c5d61" stroke-width="4"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="21" fill="#fff">
+    <text x="1130" y="426">OCR</text><text x="1470" y="426" text-anchor="end" fill="#c9c8c2" font-weight="700">0.97</text>
+    <text x="1130" y="464">barcode</text><text x="1470" y="464" text-anchor="end" fill="#c9c8c2" font-weight="700">decoded</text>
+    <text x="1130" y="502">PID error</text><text x="1470" y="502" text-anchor="end" fill="#c9c8c2" font-weight="700">0.06 m</text>
+  </g>
+  <rect x="1130" y="528" width="340" height="10" rx="5" fill="#fff" fill-opacity="0.12"/>
+  <rect x="1130" y="528" width="200" height="10" rx="5" fill="#5c5d61"/>
+
+  <g filter="url(#sh)">
+    <rect x="1090" y="630" width="420" height="200" rx="30" fill="#5c5d61"/>
+  </g>
+  <text x="1130" y="688" font-size="18" fill="#fff" fill-opacity="0.75" font-family="Menlo, Consolas, monospace" letter-spacing="2">MISSION</text>
+  <text x="1130" y="752" font-size="58" font-weight="800" fill="#fff" letter-spacing="-2">6 / 12</text>
+  <text x="1130" y="796" font-size="19" fill="#fff" fill-opacity="0.85">slots inspected · serpentine order</text>
+</svg>

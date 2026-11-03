@@ -6,8 +6,11 @@
     <meta name="theme-color" content="#ffffff" />
     <title>Rendra's Mind</title>
     <link rel="icon" href="data:," />
-    <script type="module" crossorigin src="/assets/index-BcmtFICt.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BVZorG5k.css">
+    <!-- Nothing shows until the site is built (main.ts adds .is-ready): before
+         that the page is raw HTML, its pictures unstyled. -->
+    <style>html{background:#efefec}html:not(.is-ready) body{visibility:hidden}</style>
+    <script type="module" crossorigin src="/Portfolio/assets/index-CuPGFaJe.js"></script>
+    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-BS_59QqH.css">
   </head>
   <body>
     <div id="viewport">
@@ -24,12 +27,6 @@
           <div class="stack"></div>
         </main>
 
-        <!-- About me: a photocopied-poster sheet, built by about/about.ts from about/content.ts.
-             Scrolls on its own on small screens (data-own-scroll). -->
-        <section class="about page" id="about" aria-labelledby="about-title" data-own-scroll>
-          <div class="about__sheet"></div>
-        </section>
-
         <!-- DRAFT — the previous "About me" (the five of me). Kept, but out of the
              site: no card, no navigation. View it at /?preview=hero -->
         <section class="hero page page--draft" id="hero" aria-labelledby="hero-title">
@@ -37,23 +34,23 @@
 
           <div class="stage" id="stage">
             <!-- Layers, back to front -->
-            <img class="layer layer--base" src="/assets/everyone-TSY16zMC.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" draggable="false" />
+            <img class="layer layer--base" src="/Portfolio/assets/everyone-TSY16zMC.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" draggable="false" />
 
             <!-- Sit exactly on top of the base photo (same source pixels) with a light,
                  always-on breathing loop — see scene.ts. Below the dim/hover layers, so
                  hovering one person still dims the others, breathing included. -->
-            <img class="layer layer--idle" data-person="1" src="/assets/p1-idle-CTS2gdid.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--idle" data-person="2" src="/assets/p2-idle-BRcOoOdA.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--idle" data-person="3" src="/assets/p3-idle-CSSyx8uZ.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--idle" data-person="4" src="/assets/p4-idle-CVQIoQg4.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--idle" data-person="5" src="/assets/p5-idle-bDQpLAGC.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="1" src="/Portfolio/assets/p1-idle-CTS2gdid.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="2" src="/Portfolio/assets/p2-idle-BRcOoOdA.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="3" src="/Portfolio/assets/p3-idle-CSSyx8uZ.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="4" src="/Portfolio/assets/p4-idle-CVQIoQg4.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--idle" data-person="5" src="/Portfolio/assets/p5-idle-bDQpLAGC.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
 
-            <img class="layer layer--dim" src="/assets/everyone-dim-CADim4lH.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--person" data-person="1" src="/assets/p1-KbOBEnal.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--person" data-person="2" src="/assets/p2-BnPna3bW.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--person" data-person="3" src="/assets/p3-BQ0aVxqW.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--person" data-person="4" src="/assets/p4-CIFLTA4a.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="layer layer--person" data-person="5" src="/assets/p5-X_zEh5Oy.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--dim" src="/Portfolio/assets/everyone-dim-CADim4lH.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="1" src="/Portfolio/assets/p1-KbOBEnal.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="2" src="/Portfolio/assets/p2-BnPna3bW.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="3" src="/Portfolio/assets/p3-BQ0aVxqW.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="4" src="/Portfolio/assets/p4-CIFLTA4a.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="layer layer--person" data-person="5" src="/Portfolio/assets/p5-X_zEh5Oy.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
 
             <!-- Role labels (visual only: the hotspot buttons carry the accessible name) -->
             <p class="role" data-person="1" aria-hidden="true">Clothing Brand</p>
@@ -70,44 +67,43 @@
             <button class="hotspot" type="button" data-person="5" aria-label="Content Maker"></button>
           </div>
 
-          <a class="hero__hint" href="#work" aria-hidden="true" tabindex="-1">
+          <a class="hero__hint" href="#experiences" aria-hidden="true" tabindex="-1">
             <svg viewBox="0 0 24 24"><path d="M12 5v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
           </a>
         </section>
 
-        <section class="tapes page" id="work" aria-labelledby="work-title">
-          <header class="tapes__bar">
-            <span class="tapes__bar-label">Portfolio</span>
-            <h2 class="tapes__bar-title" id="work-title">Selected Projects</h2>
-            <span class="tapes__bar-label" id="work-count"></span>
-          </header>
 
-          <div class="tapes__stage">
-            <button class="tapes__nav tapes__nav--prev" type="button" aria-label="Previous project">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            </button>
-
-            <div class="tapes__row">
-              <div class="tapes__track"></div>
-            </div>
-
-            <button class="tapes__nav tapes__nav--next" type="button" aria-label="Next project">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            </button>
-          </div>
-
-          <div class="tapes__caption">
-            <p class="tapes__caption-hint">Hover — or tap — a tape to see the project</p>
-            <p class="tapes__caption-project">
-              <span class="tapes__caption-title"></span>
-              <span class="tapes__caption-subtitle"></span>
-              <span class="tapes__caption-tagline"></span>
-            </p>
-          </div>
+        <!-- Experiences: a glass folder of small pages, each zooming up into its guided tour (experiences/experiences.ts, tour.ts) -->
+        <section class="xp page" id="experiences" aria-label="Experiences">
+          <div class="xp__bg" aria-hidden="true"></div>
+          <div class="xp__app"></div>
         </section>
 
-        <!-- Experiences: a 3D street pole, one sign per experience (signs/signs.ts) -->
-        <section class="signs page" id="signs" aria-labelledby="signs-title">
+        <!-- Draft: the HQ, a 3D room, one zone per part of the portfolio (hq/hq.ts) — /?preview=hq -->
+        <section class="hq page page--draft" id="hq" aria-labelledby="hq-title">
+          <div class="hq__stage"></div>
+          <div class="hq__labels"></div>
+          <header class="hq__head">
+            <h2 class="hq__title" id="hq-title">HQ</h2>
+            <p class="hq__crumb"></p>
+            <button class="hq__back" type="button" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Back to the HQ
+            </button>
+          </header>
+          <nav class="hq__zones" aria-label="Zones"></nav>
+          <p class="hq__tip" aria-hidden="true"></p>
+          <aside class="signs__panel hq__panel" aria-hidden="true" inert>
+            <button class="signs__panel-close" type="button" aria-label="Close">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            </button>
+            <div class="signs__panel-body" data-own-scroll></div>
+          </aside>
+          <div class="hq__loading" aria-hidden="true"><span>Opening the HQ</span></div>
+        </section>
+
+        <!-- Draft: the previous Experiences, a 3D street pole (signs/signs.ts) — /?preview=signs -->
+        <section class="signs page page--draft" id="signs" aria-labelledby="signs-title">
           <div class="signs__stage"></div>
           <header class="signs__head">
             <h2 class="signs__title" id="signs-title">Experiences</h2>
@@ -125,9 +121,9 @@
 
         <section class="brand page" id="brand" aria-labelledby="brand-title">
           <div class="brand__scene" aria-hidden="true">
-            <img class="brand__layer" src="/assets/scene-bg-D84fAC99.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="brand__layer" src="/assets/scene-shadow-BIqGWcio.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
-            <img class="brand__layer brand__layer--hero" src="/assets/scene-hero-Dl1y3Vbf.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="brand__layer" src="/Portfolio/assets/scene-bg-D84fAC99.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="brand__layer" src="/Portfolio/assets/scene-shadow-BIqGWcio.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
+            <img class="brand__layer brand__layer--hero" src="/Portfolio/assets/scene-hero-Dl1y3Vbf.webp" alt="" width="1920" height="1080" decoding="async" draggable="false" />
           </div>
 
           <div class="brand__menubar" aria-hidden="true">
@@ -159,7 +155,7 @@
                 <div class="phone__edge" aria-hidden="true"></div>
                 <div class="phone__frame">
                   <div class="phone__screen">
-                    <img class="phone__wallpaper" src="/assets/scene-bg-D84fAC99.webp" alt="" draggable="false" />
+                    <img class="phone__wallpaper" src="/Portfolio/assets/scene-bg-D84fAC99.webp" alt="" draggable="false" />
 
                     <div class="phone__status" aria-hidden="true">
                       <span class="phone__status-time">9:41</span>
@@ -212,7 +208,7 @@
                       </button>
 
                       <button class="phone__photo-widget" type="button" data-open="notes" aria-label="Open the Xandvar story in Notes">
-                        <img src="/assets/hoodie-model-DtvhnMhn.webp" alt="" draggable="false" />
+                        <img src="/Portfolio/assets/hoodie-model-DtvhnMhn.webp" alt="" draggable="false" />
                         <span class="phone__photo-widget-caption">
                           <strong>xandvar</strong>
                           <span>X marks the variables</span>
@@ -379,7 +375,7 @@
             </div>
           </div>
 
-          <img class="brand__logo" src="/assets/logo-DfvM-ou2.webp" alt="" aria-hidden="true" draggable="false" />
+          <img class="brand__logo" src="/Portfolio/assets/logo-DfvM-ou2.webp" alt="" aria-hidden="true" draggable="false" />
 
           <h2 class="brand__wordmark" id="brand-title">xandvar</h2>
 
@@ -434,6 +430,6 @@
         <span class="np-bar mini-player__bar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="np-bar-fill"></span></span>
       </div>
     </div>
-
+
   </body>
 </html>
