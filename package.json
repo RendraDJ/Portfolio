@@ -11,7 +11,9 @@
     "assets": "node scripts/bake-layers.mjs",
     "assets:tapes": "node scripts/bake-tapes.mjs",
     "assets:brand": "node scripts/bake-brand.mjs",
-    "assets:blueprints": "node scripts/bake-blueprints.mjs"
+    "assets:blueprints": "node scripts/bake-blueprints.mjs",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@fontsource/montserrat": "^5.3.0",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/three": "^0.186.0",
+    "gh-pages": "^6.3.0",
     "sharp": "^0.35.4",
     "typescript": "^7.0.2",
     "vite": "^8.3.0"
