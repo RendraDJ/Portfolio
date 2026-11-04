@@ -23,7 +23,7 @@ const icon = (path: string) => {
 export function openReport(e: Experience): void {
   if (!e.report) return;
   const file = e.report.split('/').pop()!;
-  const address = h('div', 'browser__address', [icon('M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z'), h('span', '', [`rendra.dev${e.report}`])]);
+  const address = h('div', 'browser__address', [icon('M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z'), h('span', '', [`rendra.dev/reports/${file}`])]);
   const open = h('a', 'browser__action');
   open.href = e.report;
   open.target = '_blank';

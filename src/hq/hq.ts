@@ -14,6 +14,7 @@ import { openReport } from '../os/report';
 import { mountDemo } from '../signs/demos';
 import type { Experience } from '../signs/content';
 import '../pages'; // side-effect import: declares the pageenter/pageleave event types used below
+import { publicUrl } from '../url';
 
 /**
  * The HQ (see room.ts): seen from high in a corner, with a label on each zone.
@@ -128,7 +129,7 @@ export function initHq(): void {
   let zones: Zone[] = [];
   function ensureLoft() {
     if (loft) return;
-    new HDRLoader(manager).load('/hq/env/office_night_1k.hdr', (hdr) => {
+    new HDRLoader(manager).load(publicUrl('/hq/env/office_night_1k.hdr'), (hdr) => {
       scene.environment = pmrem.fromEquirectangular(hdr).texture;
       hdr.dispose();
     });

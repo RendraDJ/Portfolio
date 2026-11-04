@@ -1,4 +1,5 @@
 import { createOsWindow } from '../os/window-manager';
+import { publicUrl } from '../url';
 import iconTshirt from '../assets/brand/icon-tshirt.webp';
 import iconZip1 from '../assets/brand/icon-zip1.webp';
 import iconZip2 from '../assets/brand/icon-zip2.webp';
@@ -23,9 +24,9 @@ const pagesOf = (slug: string) =>
 
 // Served as-is from /public — see public/blueprints/.
 export const BLUEPRINTS: readonly BlueprintFile[] = [
-  { name: 'T-SHIRTS.pdf', file: '/blueprints/T-SHIRTS.pdf', icon: iconTshirt, detail: 'Tee lineup — prints & placements', pages: pagesOf('tshirts') },
-  { name: 'Techpack — Zip Hoodie.pdf', file: '/blueprints/Techpack-Zip-Hoodie.pdf', icon: iconZip1, detail: 'Construction, fabrics, measurements', pages: pagesOf('techpack') },
-  { name: 'Full Zip Hoodie.pdf', file: '/blueprints/Full-Zip-Hoodie.pdf', icon: iconZip2, detail: 'Artwork & colourways', pages: pagesOf('fullzip') },
+  { name: 'T-SHIRTS.pdf', file: publicUrl('/blueprints/T-SHIRTS.pdf'), icon: iconTshirt, detail: 'Tee lineup — prints & placements', pages: pagesOf('tshirts') },
+  { name: 'Techpack — Zip Hoodie.pdf', file: publicUrl('/blueprints/Techpack-Zip-Hoodie.pdf'), icon: iconZip1, detail: 'Construction, fabrics, measurements', pages: pagesOf('techpack') },
+  { name: 'Full Zip Hoodie.pdf', file: publicUrl('/blueprints/Full-Zip-Hoodie.pdf'), icon: iconZip2, detail: 'Artwork & colourways', pages: pagesOf('fullzip') },
 ];
 
 function h<K extends keyof HTMLElementTagNameMap>(

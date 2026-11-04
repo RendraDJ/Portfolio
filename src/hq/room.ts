@@ -8,6 +8,7 @@ import hoodieModel from '../assets/brand/hoodie-model.webp';
 import palletlensCassette from '../assets/tapes/palletlens-cassette.webp';
 import escoCassette from '../assets/tapes/esco-cassette.webp';
 import lirmmCassette from '../assets/tapes/lirmm-cassette.webp';
+import { publicUrl } from '../url';
 
 /**
  * The HQ: a cosy, modern geek room at night, seen from high in a corner
@@ -538,7 +539,7 @@ export function buildRoom(manager: THREE.LoadingManager) {
   const gltf = new GLTFLoader(manager);
   const ticks: ((t: number) => void)[] = [];
   const put = (id: string, x: number, y: number, z: number, o: { rotY?: number; scale?: number } = {}) =>
-    gltf.load(`/hq/models/${id}/${id}.gltf`, (m) => {
+    gltf.load(publicUrl(`/hq/models/${id}/${id}.gltf`), (m) => {
       const s = m.scene;
       if (o.scale) s.scale.setScalar(o.scale);
       s.rotation.y = o.rotY ?? 0;

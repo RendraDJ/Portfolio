@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { publicUrl } from '../url';
 import type { Experience } from '../signs/content';
 
 /** Textures for the HQ: loaders for the CC0 sets in public/hq, and the canvases
@@ -10,7 +11,7 @@ export function makeTextures(manager: THREE.LoadingManager) {
   return (path: string, color = false) => {
     let tex = cache.get(path);
     if (!tex) {
-      tex = loader.load(path);
+      tex = loader.load(publicUrl(path));
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
       tex.anisotropy = 8;
       if (color) tex.colorSpace = THREE.SRGBColorSpace;

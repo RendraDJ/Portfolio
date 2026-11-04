@@ -4,6 +4,7 @@
  * Written from the internship reports and CVs in ../experiences and ../cv.
  * Edit freely: the panel that opens on click is built from these fields.
  */
+import { publicUrl } from '../url';
 
 /** The object on the pole that stands for the experience (see build.ts). */
 export type SignKind = 'drone' | 'desk' | 'mailbox' | 'robot' | 'arm';
@@ -33,7 +34,7 @@ export const experiences: readonly Experience[] = [
     slug: 'palletlens',
     kind: 'drone',
     title: 'Drone-Based Logistics Inspection',
-    report: '/reports/Audensiel.pdf',
+    report: publicUrl('/reports/Audensiel.pdf'),
     where: 'Audensiel — R&D Innovation Lab, Boulogne-Billancourt',
     when: 'Mar — Aug 2026',
     role: 'Software & Robotics Engineer (internship)',
@@ -54,7 +55,7 @@ export const experiences: readonly Experience[] = [
     slug: 'phantom-posture',
     kind: 'desk',
     title: 'Digital Twin for Posture Prevention',
-    report: '/reports/LIRMM.pdf',
+    report: publicUrl('/reports/LIRMM.pdf'),
     where: 'LIRMM, Montpellier',
     when: 'Oct 2025 — Feb 2026',
     role: 'Robotics & IoT Engineer',
@@ -75,7 +76,7 @@ export const experiences: readonly Experience[] = [
     slug: 'the-classifier',
     kind: 'mailbox',
     title: 'Automatic E-mail Classification',
-    report: '/reports/ESCO.pdf',
+    report: publicUrl('/reports/ESCO.pdf'),
     where: 'ESCO Lifesciences, Singapore',
     when: 'May — Jul 2025',
     role: 'AI / NLP Software Engineer (internship)',
@@ -107,7 +108,7 @@ export const experiences: readonly Experience[] = [
     slug: 'convergence',
     kind: 'arm',
     title: 'UR10 Kinematic Control',
-    report: '/reports/UR10.pdf',
+    report: publicUrl('/reports/UR10.pdf'),
     where: 'Master’s project — Manipulation Robotics',
     when: '2024 — 2025',
     role: 'Academic project',
