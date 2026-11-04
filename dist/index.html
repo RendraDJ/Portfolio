@@ -9,8 +9,8 @@
     <!-- Nothing shows until the site is built (main.ts adds .is-ready): before
          that the page is raw HTML, its pictures unstyled. -->
     <style>html{background:#efefec}html:not(.is-ready) body{visibility:hidden}</style>
-    <script type="module" crossorigin src="/Portfolio/assets/index-DyDNjgkZ.js"></script>
-    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-BS_59QqH.css">
+    <script type="module" crossorigin src="/Portfolio/assets/index-C_HrCMHB.js"></script>
+    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-CP7zrqIq.css">
   </head>
   <body>
     <div id="viewport">
@@ -26,6 +26,11 @@
           <!-- One card per section, each showing it live — filled in by home.ts from home/content.ts -->
           <div class="stack"></div>
         </main>
+
+        <!-- About me: a scrapbook page — portrait, hello, polaroids, the CV at a glance (about/about.ts) -->
+        <section class="about page" id="about" aria-label="About me">
+          <div class="about__sheet" data-own-scroll></div>
+        </section>
 
         <!-- DRAFT — the previous "About me" (the five of me). Kept, but out of the
              site: no card, no navigation. View it at /?preview=hero -->

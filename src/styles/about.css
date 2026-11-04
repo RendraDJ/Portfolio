@@ -1,0 +1,373 @@
+/* ------------------------------------------------------------------ *
+ * About me: a scrapbook page on squared paper (about/about.ts).
+ * Laid out for a landscape screen in one view; portrait screens get a
+ * single column that scrolls inside the sheet.
+ * ------------------------------------------------------------------ */
+
+.about {
+  /* the portfolio's own black, greys and white (as in experiences.css) */
+  --paper: #0b0b0b;
+  --grid: rgba(255, 255, 255, 0.045);
+  --ink: #f6f3ee;
+  --dim: rgba(246, 243, 238, 0.6);
+  --line: rgba(255, 255, 255, 0.22);
+  --print: #1d1c1a; /* text written on the white polaroids */
+  --hand: 'Shadows Into Light Two', 'Comic Sans MS', cursive;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+.about__sheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 26% 1fr 29%;
+  gap: 3.2vw;
+  align-items: center;
+  padding: 6vh 4.5vw 7vh;
+  overflow-y: auto; /* only on screens too short for the page (a wide, low window) */
+  scrollbar-width: none;
+}
+
+/* ---- the portrait, taped on ---- */
+
+.about__portrait {
+  position: relative;
+  margin: 0;
+  rotate: -3deg;
+}
+
+.about__portrait-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 0.7vw solid #fff;
+  outline: 1px solid var(--line);
+  outline-offset: 0.6vw;
+  box-shadow: 0 1.4vw 2.6vw rgba(0, 0, 0, 0.6);
+}
+
+/* a strip of tape over the top edge */
+.about__portrait::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -1.3vw;
+  left: 50%;
+  width: 34%;
+  height: 2.4vw;
+  translate: -50% 0;
+  rotate: 4deg;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(2px);
+}
+
+.about__sticker {
+  position: absolute;
+  left: -2.2vw;
+  bottom: -2.8vw;
+  width: 31%;
+  aspect-ratio: 1;
+  border: 0.45vw solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0.6vw 1.4vw rgba(0, 0, 0, 0.6);
+  rotate: 8deg;
+}
+
+.about__sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about__note {
+  position: absolute;
+  left: 28%;
+  bottom: -3.4vw;
+  font-family: var(--hand);
+  font-size: clamp(13px, 1.25vw, 24px);
+  color: var(--dim);
+  white-space: nowrap;
+  rotate: -4deg;
+}
+
+/* ---- hello, bio, polaroids ---- */
+
+.about__middle {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  min-width: 0;
+}
+
+.about__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4vh;
+}
+
+.about__hello {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(30px, 4vw, 78px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.about__hello mark {
+  padding: 0 0.06em;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.about__role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2em 0.6em;
+  margin: 0;
+  font-size: clamp(12px, 0.95vw, 18px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about__dot {
+  color: var(--dim);
+}
+
+.about__bio {
+  margin: 0;
+  max-width: 44ch;
+  font-size: clamp(13px, 1.02vw, 19px);
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+.about__bio strong {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.about__polaroids {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1vw;
+  margin-top: 1.4vh;
+}
+
+.about__polaroid {
+  margin: 0;
+  padding: 0.5vw 0.5vw 0;
+  background: #fff;
+  color: var(--print);
+  box-shadow: 0 0.6vw 1.5vw rgba(0, 0, 0, 0.6);
+  transition: rotate 0.35s ease, translate 0.35s ease;
+}
+
+.about__polaroid:nth-child(1) { rotate: -5deg; }
+.about__polaroid:nth-child(2) { rotate: 3deg; translate: 0 1vh; }
+.about__polaroid:nth-child(3) { rotate: -2deg; }
+.about__polaroid:nth-child(4) { rotate: 5deg; translate: 0 0.6vh; }
+
+@media (hover: hover) {
+  .about__polaroid:hover {
+    rotate: 0deg;
+    translate: 0 -0.8vh;
+  }
+}
+
+.about__polaroid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.about__polaroid figcaption {
+  padding: 0.35vw 0 0.55vw;
+  font-family: var(--hand);
+  font-size: clamp(12px, 1.05vw, 20px);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- the CV at a glance ---- */
+
+.about__side {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2vh;
+  min-width: 0;
+}
+
+.about__label {
+  margin: 0 0 0.8vh;
+  font-size: clamp(14px, 1.15vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.about__entries,
+.about__focus,
+.about__tools {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about__entry {
+  display: grid;
+  grid-template-columns: 5.2vw 1fr;
+  gap: 0.8vw;
+  padding: 0.35vh 0;
+  font-size: clamp(11px, 0.8vw, 15px);
+  line-height: 1.35;
+}
+
+.about__when {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.about__what {
+  display: flex;
+  flex-direction: column;
+}
+
+.about__what span {
+  color: var(--dim);
+}
+
+.about__pair {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1vw;
+}
+
+.about__focus li {
+  position: relative;
+  padding-left: 1em;
+  font-size: clamp(11px, 0.8vw, 15px);
+  line-height: 1.6;
+}
+
+.about__focus li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--dim);
+}
+
+.about__small {
+  margin: 0;
+  font-size: clamp(11px, 0.8vw, 15px);
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.about__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45vw;
+}
+
+.about__tools li {
+  padding: 0.3vw 0.65vw;
+  border: 1px solid var(--line);
+  border-radius: 0.4vw;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--ink);
+  font-size: clamp(10px, 0.72vw, 14px);
+  font-weight: 600;
+}
+
+.about__contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6vw 1.1vw;
+}
+
+.about__cv,
+.about__link {
+  font-size: clamp(12px, 0.85vw, 16px);
+  font-weight: 800;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.about__cv {
+  padding: 0.6vw 1.1vw;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  transition: translate 0.2s ease;
+}
+
+.about__link {
+  border-bottom: 2px solid var(--line);
+  transition: border-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .about__cv:hover { translate: 0 -2px; }
+  .about__link:hover { border-color: var(--ink); }
+}
+
+.about__cv:focus-visible,
+.about__link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---- portrait screens: one column, scrolling inside the sheet ---- */
+
+@media (orientation: portrait) {
+  .about__sheet {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+    padding: 56px 16px 96px;
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+
+  .about__portrait {
+    width: min(62vw, 300px);
+    margin: 0 auto 24px;
+  }
+
+  .about__portrait-img { border-width: 8px; outline-offset: 6px; }
+  .about__portrait::before { top: -14px; height: 26px; }
+  .about__sticker { left: -22px; bottom: -28px; border-width: 4px; }
+  .about__note { bottom: -36px; }
+
+  .about__polaroids {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .about__polaroid { padding: 6px 6px 0; }
+  .about__polaroid figcaption { padding: 6px 0 8px; }
+  .about__entry { grid-template-columns: 72px 1fr; gap: 10px; }
+  .about__pair { grid-template-columns: 1fr; gap: 20px; }
+  .about__tools { gap: 6px; }
+  .about__tools li { padding: 4px 9px; border-radius: 6px; }
+  .about__contact { gap: 12px 16px; }
+  .about__cv { padding: 10px 16px; }
+}

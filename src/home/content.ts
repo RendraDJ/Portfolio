@@ -13,6 +13,7 @@ export interface HomeCard {
 export const cards: readonly HomeCard[] = [
   { title: 'Experiences.', section: 'experiences', peek: 0 },
   { title: 'Xandvar.', section: 'brand', peek: 3.5 },
+  { title: 'About me.', section: 'about', peek: 0 },
 ];
 
 /** The logo, written on a spinning drum (see home.ts). */

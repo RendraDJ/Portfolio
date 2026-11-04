@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import '@fontsource/montserrat/latin-600.css';
 import '@fontsource/montserrat/latin-800.css';
+import '@fontsource/shadows-into-light-two/latin-400.css';
 import './styles/base.css';
 import './styles/home.css';
 import './styles/scene.css';
@@ -17,12 +18,14 @@ import './styles/explainer.css';
 import './styles/app-guide.css';
 import './styles/drone-app.css';
 import './styles/posture-app.css';
+import './styles/about.css';
 import { initHome } from './home/home';
 import { initScene } from './scene/scene';
 import { initSigns } from './signs/signs';
 import { initHq } from './hq/hq';
 import { initExperiences } from './experiences/experiences';
 import { initBrand } from './brand/brand';
+import { initAbout } from './about/about';
 import { initPages, type PageChangeDetail } from './pages';
 import { previewId } from './preview';
 import { initMusic } from './music/player';
@@ -30,6 +33,7 @@ import { initStudio } from './os/studio';
 
 // The site's sections, in deck order after the home page.
 const SECTIONS: Record<string, () => void> = {
+  about: initAbout,
   experiences: initExperiences,
   brand: initBrand,
 };
@@ -77,7 +81,7 @@ if (previewId) {
   initHome();
   for (const init of Object.values(SECTIONS)) init();
   // every page sits on the same monitor as Xandvar (which does it itself, first)
-  for (const id of ['experiences']) {
+  for (const id of ['about', 'experiences']) {
     const section = document.getElementById(id);
     if (section) initStudio(section);
   }
