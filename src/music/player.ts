@@ -6,20 +6,16 @@
 // and a still thumbnail standing in for album art.
 import { isPreview } from '../preview';
 
-const PLAYLIST_ID = 'PLAixZQkw4oqQ';
-// The playlist's first tracks, in the order the site plays them (positions
-// in the YouTube playlist, 0 = first); the rest follow in playlist order.
-// [1, 0]: the second track opens the site, then the first.
-const OPENING = [1, 0];
+const PLAYLIST_ID = 'PLAixZQkw4oqQ'; // played as it is on YouTube: its own order, from the first track, looping
 const AUTOPLAY_CHECK = 1500; // ms to wait for the browser to allow playback with sound on launch
 const START_AFTER_CARD = 1400; // ms — just after a home card has grown to fill the screen (home.ts)
 
 interface YtPlayer {
   playVideo(): void;
   pauseVideo(): void;
-  playVideoAt(index: number): void;
-  getPlaylist(): string[] | null;
-  getPlaylistIndex(): number;
+  nextVideo(): void;
+  previousVideo(): void;
+  setLoop(loop: boolean): void;
   seekTo(seconds: number, allowSeekAhead: boolean): void;
   getCurrentTime(): number;
   getDuration(): number;
@@ -121,24 +117,8 @@ export function initMusic(): void {
   let player: YtPlayer | null = null;
   let playing = false;
 
-  // ---- The site's own running order (see OPENING) ----
-  // `pos` is where we are in that order. YouTube moves on by itself at the end
-  // of a track, in *its* order — so the end of a track is caught and redirected.
-  let order: number[] = [];
-  let pos = 0;
-  function buildOrder() {
-    const n = player?.getPlaylist()?.length ?? 0;
-    if (!n || order.length === n) return;
-    const opening = OPENING.filter((i) => i < n);
-    order = [...opening, ...Array.from({ length: n }, (_, i) => i).filter((i) => !opening.includes(i))];
-  }
-  function playAt(nextPos: number) {
-    buildOrder();
-    if (!player || !order.length) return;
-    pos = (nextPos + order.length) % order.length;
-    player.playVideoAt(order[pos]);
-  }
   let failures = 0; // tracks in a row that couldn't play (see onError)
+  const MAX_FAILURES = 20; // that many in a row: something's wrong with the playlist itself, stop trying
   let rafId = 0;
   let muted = false; // playing silently until the first interaction (autoplay with sound was refused)
 
@@ -192,9 +172,10 @@ export function initMusic(): void {
   loadYouTubeApi().then((YT) => {
     player = new YT.Player(host, {
       host: 'https://www.youtube-nocookie.com',
-      playerVars: { listType: 'playlist', list: PLAYLIST_ID, index: OPENING[0] ?? 0, playsinline: 1, modestbranding: 1, rel: 0 },
+      playerVars: { listType: 'playlist', list: PLAYLIST_ID, index: 0, playsinline: 1, modestbranding: 1, rel: 0 },
       events: {
         onReady: () => {
+          player?.setLoop(true); // after the last track, back to the first
           refreshTrack();
           // Start with the site. If the browser refuses sound, fall back to
           // playing muted until the visitor's first interaction.
@@ -210,27 +191,12 @@ export function initMusic(): void {
         // would stop the music there: skip it, so the whole playlist goes on.
         // If every track fails in a row, give up rather than loop forever.
         onError: () => {
-          buildOrder();
-          if (!order.length || ++failures >= order.length) return;
-          playAt(pos + 1);
+          if (++failures >= MAX_FAILURES) return;
+          player?.nextVideo();
         },
+        // YouTube itself goes from one track to the next, in the playlist's order.
         onStateChange: (e: { data: number }) => {
           if (e.data === YT.PlayerState.PLAYING) failures = 0;
-          buildOrder();
-          // A track ended: go on in our order, not YouTube's.
-          if (e.data === YT.PlayerState.ENDED && order.length) {
-            playAt(pos + 1);
-            return;
-          }
-          // Safety net: if YouTube moved on by itself anyway, put the right track on.
-          if (e.data === YT.PlayerState.PLAYING && order.length && player) {
-            const index = player.getPlaylistIndex();
-            if (index !== order[pos]) {
-              const nextPos = (pos + 1) % order.length;
-              if (index === order[nextPos]) pos = nextPos;
-              else playAt(nextPos);
-            }
-          }
           setPlaying(e.data === YT.PlayerState.PLAYING);
           if (e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.CUED) refreshTrack();
         },
@@ -247,8 +213,8 @@ export function initMusic(): void {
       else player.playVideo();
     });
   }
-  for (const btn of prevBtns) btn.addEventListener('click', (e) => { e.stopPropagation(); playAt(pos - 1); });
-  for (const btn of nextBtns) btn.addEventListener('click', (e) => { e.stopPropagation(); playAt(pos + 1); });
+  for (const btn of prevBtns) btn.addEventListener('click', (e) => { e.stopPropagation(); player?.previousVideo(); });
+  for (const btn of nextBtns) btn.addEventListener('click', (e) => { e.stopPropagation(); player?.nextVideo(); });
 
   for (const bar of bars) {
     bar.addEventListener('pointerdown', (e) => {
