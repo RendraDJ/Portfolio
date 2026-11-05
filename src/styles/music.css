@@ -71,7 +71,7 @@
   display: none;
 }
 
-/* Playing muted until the first click (see music/player.ts): say so. */
+/* Waiting for the first click to start the playlist (see music/player.ts): say so. */
 .mini-player__hint {
   display: none;
   overflow: hidden;
@@ -81,11 +81,11 @@
   white-space: nowrap;
 }
 
-.is-music-muted .mini-player__hint {
+.is-music-waiting .mini-player__hint {
   display: block;
 }
 
-.is-music-muted .mini-player__artist {
+.is-music-waiting .mini-player__artist {
   display: none;
 }
 

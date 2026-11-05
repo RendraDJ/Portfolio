@@ -7,7 +7,6 @@
 import { isPreview } from '../preview';
 
 const PLAYLIST_ID = 'PLAixZQkw4oqQ'; // played as it is on YouTube: its own order, from the first track, looping
-const AUTOPLAY_CHECK = 1500; // ms to wait for the browser to allow playback with sound on launch
 const START_AFTER_CARD = 1400; // ms — just after a home card has grown to fill the screen (home.ts)
 
 interface YtPlayer {
@@ -25,7 +24,6 @@ interface YtPlayer {
   getPlayerState(): number;
   mute(): void;
   unMute(): void;
-  isMuted(): boolean;
 }
 
 interface YtNamespace {
@@ -89,11 +87,10 @@ function formatTime(seconds: number): string {
  *   .np-bar (> .np-bar-fill, .np-bar-handle), .np-time-current, .np-time-duration
  * <body> (and each .np-play) gets `is-playing` / `is-music-playing` while audio runs.
  *
- * The music starts as the site opens. Browsers usually only allow *sound*
- * once the visitor has interacted with the page, so if playing with sound
- * is refused, it plays muted (always allowed) and the sound comes on at
- * their first click, tap or key press — anywhere — without restarting the
- * track. From then on it simply keeps going.
+ * The playlist starts, with sound, at the visitor's first click, tap or key
+ * press — anywhere (browsers allow sound only after one). Until then <body>
+ * has `is-music-waiting`, and the mini player says so. From then on it simply
+ * keeps going.
  */
 export function initMusic(): void {
   if (isPreview) return; // a silent preview on the home page: no player, no sound
@@ -120,19 +117,7 @@ export function initMusic(): void {
   let failures = 0; // tracks in a row that couldn't play (see onError)
   const MAX_FAILURES = 20; // that many in a row: something's wrong with the playlist itself, stop trying
   let rafId = 0;
-  let muted = false; // playing silently until the first interaction (autoplay with sound was refused)
-
-  function setMuted(next: boolean) {
-    muted = next;
-    document.body.classList.toggle('is-music-muted', muted);
-  }
-
-  function unmute() {
-    if (!player || !(muted || player.isMuted())) return;
-    player.unMute();
-    player.setVolume(100);
-    setMuted(false);
-  }
+  document.body.classList.add('is-music-waiting');
 
   function setPlaying(next: boolean) {
     playing = next;
@@ -177,15 +162,7 @@ export function initMusic(): void {
         onReady: () => {
           player?.setLoop(true); // after the last track, back to the first
           refreshTrack();
-          // Start with the site. If the browser refuses sound, fall back to
-          // playing muted until the visitor's first interaction.
-          player?.playVideo();
-          setTimeout(() => {
-            if (!player || player.getPlayerState() === YT.PlayerState.PLAYING || interacted) return;
-            player.mute();
-            setMuted(true);
-            player.playVideo();
-          }, AUTOPLAY_CHECK);
+          if (interacted) player?.playVideo(); // clicked before the player was ready
         },
         // A track that can't play (removed, private, or not allowed off YouTube)
         // would stop the music there: skip it, so the whole playlist goes on.
@@ -196,7 +173,12 @@ export function initMusic(): void {
         },
         // YouTube itself goes from one track to the next, in the playlist's order.
         onStateChange: (e: { data: number }) => {
-          if (e.data === YT.PlayerState.PLAYING) failures = 0;
+          if (e.data === YT.PlayerState.PLAYING) {
+            failures = 0;
+            // it's started: from now on it's the visitor's to pause or skip
+            document.body.classList.remove('is-music-waiting');
+            stopListening();
+          }
           setPlaying(e.data === YT.PlayerState.PLAYING);
           if (e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.CUED) refreshTrack();
         },
@@ -208,8 +190,7 @@ export function initMusic(): void {
     btn.addEventListener('click', (e) => {
       e.stopPropagation(); // the lock screen unlocks on click — a tap on its play button shouldn't
       if (!player) return;
-      if (muted) unmute(); // the first press on play just turns the sound on
-      else if (playing) player.pauseVideo();
+      if (playing) player.pauseVideo();
       else player.playVideo();
     });
   }
@@ -226,42 +207,28 @@ export function initMusic(): void {
     });
   }
 
-  // ---- The visitor's interactions: sound on (or start, if it never did) ----
+  // ---- The visitor's first interaction: the playlist starts ----
   // Browsers differ on which event counts as a real interaction (Safari on
-  // iPhone only trusts the end of a tap), so this keeps trying on each one
-  // until the music is actually playing with sound, then stops listening.
+  // iPhone only trusts the end of a tap), so this tries on each one until
+  // the music is playing (see onStateChange), then stops listening.
   const startEvents = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const;
   let interacted = false;
-  let asked = false; // a start was already asked for after an interaction
   function stopListening() {
     for (const type of startEvents) document.removeEventListener(type, onInteraction, true);
   }
   function onInteraction(e: Event) {
+    const first = !interacted;
     interacted = true;
     const target = e.target as Element | null;
     // A press on one of the player's own controls handles itself.
-    if (target?.closest?.('.np-play, .np-prev, .np-next, .np-bar')) {
-      stopListening();
-      return;
-    }
-    if (muted || player?.isMuted()) {
-      // already playing silently: just bring the sound in
-      player?.unMute();
-      player?.setVolume(100);
-      setMuted(false);
-    } else if (!playing) {
-      const play = () => player?.playVideo(); // (not ready yet: it starts by itself once it is)
-      // Starting the YouTube player is heavy for a moment: if this first press
-      // opens a home-page card, wait until the card has finished growing.
-      // (Once the visitor has interacted, the browser still allows sound later.)
-      if (!asked && target?.closest?.('.card')) setTimeout(play, START_AFTER_CARD);
-      else play();
-      asked = true;
-    }
-    // done once the player confirms it is playing, sound on
-    setTimeout(() => {
-      if (player && playing && !player.isMuted()) stopListening();
-    }, 400);
+    if (target?.closest?.('.np-play, .np-prev, .np-next, .np-bar')) return;
+    if (playing) return;
+    const play = () => player?.playVideo(); // (not ready yet: it starts once it is, see onReady)
+    // Starting the YouTube player is heavy for a moment: if this first press
+    // opens a home-page card, wait until the card has finished growing.
+    // (Once the visitor has interacted, the browser still allows sound later.)
+    if (first && target?.closest?.('.card')) setTimeout(play, START_AFTER_CARD);
+    else play();
   }
   for (const type of startEvents) document.addEventListener(type, onInteraction, true);
 }
