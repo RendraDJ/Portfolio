@@ -44,7 +44,14 @@ const ICONS = {
   mask: 'M4 5h16v14H4zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
   plus: 'M5 5h14v14H5zM12 9v6M9 12h6',
   trash: 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13',
+  doc: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',
+  mail: 'M3 6h18v12H3zM3 6l9 7 9-7',
+  linkedin: 'M4 4h16v16H4zM8 10.5V16M8 7.5v.01M12 16v-5.5M12 13c0-1.8 1-2.7 2.4-2.7S17 11.2 17 13v3',
+  code: 'M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14',
 };
+
+/** The icon in front of each contact link (by its label in content.ts). */
+const LINK_ICONS: Record<string, keyof typeof ICONS> = { Email: 'mail', LinkedIn: 'linkedin', GitHub: 'code' };
 
 function icon(name: keyof typeof ICONS, className = 'ps-icon') {
   const span = h('span', className);
@@ -177,6 +184,7 @@ export function initAbout(): void {
 
   // ---- the options bar: the CV and the links live here ----
   const cv = link('View my CV', CV, 'ps-bar__cv');
+  cv.prepend(icon('doc'));
   cv.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
@@ -189,7 +197,11 @@ export function initAbout(): void {
     h('span', 'ps-bar__label', ['Auto-Select:']),
     h('span', 'ps-field', ['Layer', icon('chevron')]),
     h('span', 'ps-bar__space'),
-    ...LINKS.map((l) => link(l.label, l.href, 'ps-bar__link')),
+    ...LINKS.map((l) => {
+      const a = link(l.label, l.href, 'ps-bar__link');
+      a.prepend(icon(LINK_ICONS[l.label] ?? 'code'));
+      return a;
+    }),
     cv,
     icon('search'),
   ]);

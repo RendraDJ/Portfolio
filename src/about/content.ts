@@ -59,7 +59,7 @@ export const STUDIES: Entry[] = [
 
 export const FOCUS = ['Full-stack apps (Python, React)', 'AI, LLMs & computer vision', 'Robotics & ROS2', 'Real-time & embedded'];
 
-export const TOOLS = ['Python', 'C++', 'FastAPI', 'React', 'Docker', 'PyTorch', 'LLMs', 'OpenCV', 'YOLO', 'ROS2', 'ESP32', 'Unreal'];
+export const TOOLS = ['Python', 'JavaScript', 'React', 'FastAPI', 'WebSockets', 'LLM APIs (Claude, GPT, Mistral)', 'RAG', 'AI agents', 'LangChain', 'NLP · BERT', 'PostgreSQL', 'Docker'];
 
 export const LANGUAGES = 'French (native) · English (C1)';
 
