@@ -1,7 +1,8 @@
 import { gsap } from 'gsap';
 import '@fontsource/montserrat/latin-600.css';
 import '@fontsource/montserrat/latin-800.css';
-import '@fontsource/shadows-into-light-two/latin-400.css';
+import '@fontsource/roboto/latin-400.css';
+import '@fontsource/roboto/latin-500.css';
 import './styles/base.css';
 import './styles/home.css';
 import './styles/scene.css';

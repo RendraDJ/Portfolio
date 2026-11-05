@@ -7,9 +7,10 @@ import singapore from '../assets/about/singapore.webp';
 import { publicUrl } from '../url';
 
 /**
- * ★ About me — a scrapbook page: the portrait, a hello, a few polaroids, and
- * the CV at a glance. Written from the CVs (2027). Edit freely; about.ts
- * builds the page from these fields.
+ * ★ About me, as a photo editor: the portrait, a hello and a few polaroids on
+ * the canvas, each one a layer, and the CV at a glance in floating panels.
+ * Written from the CVs (2027). Edit freely; about.ts builds the page from
+ * these fields.
  *
  * In the bio, **double stars** mark the words set in bold.
  */
