@@ -212,21 +212,109 @@
   margin-top: 22px;
 }
 
+/* "Tap to open": a frosted pill with a finger, and a ring rippling out of it
+   like a touch, so the locked phone reads as something to press */
 .phone__unlock {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   margin: 14px 0 40px;
-  padding: 6px 14px;
-  border: 0;
-  background: none;
-  font-size: 15px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+  padding: 12px 22px 12px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
   cursor: pointer;
-  animation: phone-unlock-hint 2.4s ease-in-out infinite;
+  animation: phone-unlock-hint 1.8s ease-in-out infinite;
+}
+
+.phone__unlock::before,
+.phone__unlock::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: inherit;
+  pointer-events: none;
+  animation: phone-unlock-ring 1.8s ease-out infinite;
+}
+
+.phone__unlock::after {
+  animation-delay: 0.6s;
+}
+
+.phone__unlock-hand {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  transform-origin: 50% 90%;
+  animation: phone-unlock-tap 1.8s ease-in-out infinite;
 }
 
 @keyframes phone-unlock-hint {
-  0%, 100% { opacity: 0.45; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-3px); }
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(0.94); }
+  30% { transform: scale(1.05); }
+  45% { transform: scale(1); }
+}
+
+@keyframes phone-unlock-ring {
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.35, 1.9); }
+}
+
+@keyframes phone-unlock-tap {
+  0%, 100% { transform: translateY(0) scale(1); }
+  12% { transform: translateY(2px) scale(0.88); }
+  30% { transform: translateY(-1px) scale(1); }
+}
+
+@media (hover: hover) {
+  .phone__unlock:hover { background: rgba(255, 255, 255, 0.32); }
+}
+
+/* beside the locked phone, pointing at it; gone once it's open */
+.phone__callout {
+  position: absolute;
+  right: calc(100% + 18px);
+  bottom: 12%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  animation: phone-callout-nudge 1.8s ease-in-out infinite;
+}
+
+.phone__callout svg {
+  width: 18px;
+  height: 18px;
+}
+
+.phone:not([data-view='lock']) .phone__callout {
+  opacity: 0;
+}
+
+@keyframes phone-callout-nudge {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 8px 0; }
 }
 
 /* ---- Notification cards (lock screen stack + the in-app banner) ---------------- */
@@ -1226,6 +1314,8 @@
 /* ---- Narrow / portrait screens: the phone joins the stacked page (brand.css) ---------- */
 
 @media (max-aspect-ratio: 1 / 1), (max-height: 480px) {
+  .phone__callout { display: none; } /* the phone sits in the page's flow here: no room beside it */
+
   .phone {
     position: relative;
     top: auto;

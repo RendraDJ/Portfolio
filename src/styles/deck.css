@@ -284,6 +284,11 @@
 .xd-results__p { position: absolute; left: 4cqw; bottom: 4cqh; display: -webkit-box; width: 26cqw; margin: 0; overflow: hidden; font-size: max(10.5px, 1.55cqh); line-height: 1.5; color: rgba(28, 29, 32, 0.78); -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
 .xd-results__note { position: absolute; left: 4cqw; top: 5cqh; width: 22cqw; margin: 0; font: 600 max(9.5px, 1.35cqh)/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: rgba(28, 29, 32, 0.55); }
 
+/* ---- the poster (when the project has one): whole, as tall as the slide ---- */
+.xd-poster__title { position: absolute; left: 5cqw; top: 6cqh; margin: 0; font: 800 min(14cqh, 9cqw)/0.88 var(--font-sans, Montserrat), sans-serif; letter-spacing: -0.05em; color: var(--tone); }
+.xd-poster__title span { display: block; }
+.xd-poster__img { position: absolute; top: 4cqh; left: 58cqw; height: 92cqh; width: auto; max-width: 60cqw; object-fit: contain; translate: -50% 0; border-radius: 1cqh; box-shadow: 0 2cqh 5cqh rgba(0, 0, 0, 0.28); }
+
 /* ---- 7. the file ---- */
 .xd-outro__big { position: absolute; left: 5cqw; top: 6cqh; font: 800 min(17cqh, 11cqw)/0.84 var(--font-sans, Montserrat), sans-serif; letter-spacing: -0.06em; color: var(--tone); }
 .xd-outro__w { display: block; white-space: nowrap; }

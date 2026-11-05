@@ -26,9 +26,16 @@ export function openReport(e: Experience): void {
 
 /** `url`: the PDF's address, as given by publicUrl(). */
 export function openPdf(url: string, title: string): void {
-  const file = url.split('/').pop()!;
+  const frame = h('iframe', 'browser__page');
+  frame.src = `${url}#view=FitH`;
+  frame.title = title;
   const path = url.slice(import.meta.env.BASE_URL.length); // shown without the site's base path
-  const address = h('div', 'browser__address', [icon('M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z'), h('span', '', [`rendra.dev/${path}`])]);
+  browser(url, path, title, frame, Math.min(1040, window.innerWidth - 32), Math.min(760, window.innerHeight - 48));
+}
+
+/** The window itself, around `page`. `shown`: the path written in the address bar. */
+function browser(url: string, shown: string, title: string, page: HTMLElement, width: number, height: number) {
+  const address = h('div', 'browser__address', [icon('M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z'), h('span', '', [`rendra.dev/${shown}`])]);
   const open = h('a', 'browser__action');
   open.href = url;
   open.target = '_blank';
@@ -37,7 +44,7 @@ export function openPdf(url: string, title: string): void {
   open.append(icon('M14 4h6v6M20 4l-9 9M18 14v6H4V6h6'));
   const download = h('a', 'browser__action');
   download.href = url;
-  download.download = file;
+  download.download = shown.split('/').pop()!;
   download.title = 'Download';
   download.append(icon('M12 4v11M7 10l5 5 5-5M5 20h14'));
   const toolbar = h('div', 'browser__toolbar', [
@@ -45,12 +52,6 @@ export function openPdf(url: string, title: string): void {
     address,
     h('div', 'browser__actions', [open, download]),
   ]);
-  const frame = h('iframe', 'browser__page');
-  frame.src = `${url}#view=FitH`;
-  frame.title = title;
-  const content = h('div', 'browser', [toolbar, frame]);
-
-  const width = Math.min(1040, window.innerWidth - 32);
-  const height = Math.min(760, window.innerHeight - 48);
+  const content = h('div', 'browser', [toolbar, page]);
   createOsWindow({ title, content, width, height, minWidth: 360, minHeight: 280, className: 'os-window--browser' });
 }

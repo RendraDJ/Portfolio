@@ -438,6 +438,24 @@ export function mountDeck(p: Project, index: number, host: DeckHost, tour: boole
     };
   };
 
+  /** The project's poster, whole, as tall as the slide. */
+  const posterSlide = (src: string): Built => {
+    const img = h('img', 'xd-poster__img');
+    img.src = src;
+    img.alt = `${p.title}: poster`;
+    img.decoding = 'async';
+    img.draggable = false;
+    const title = h('h3', 'xd-poster__title', [h('span', '', ['The']), h('span', '', ['poster.'])]);
+    const el = h('section', 'xd-slide xd-poster', [title, img]);
+    return {
+      el,
+      enter(tl) {
+        tl.from(title.children, { yPercent: 100, opacity: 0, duration: t(0.8), stagger: 0.1, ease: 'expo.out' }, 0);
+        tl.from(img, { y: 120, rotate: 3, opacity: 0, duration: t(0.9), ease: 'back.out(1.3)' }, 0.2);
+      },
+    };
+  };
+
   const file = (): Built => {
     const big = h('div', 'xd-outro__big', (p.report ? 'Read the report.' : 'That’s the file.').split(' ').map((w) => letters(w, 'xd-outro__w')));
     const rows: [string, string][] = [
@@ -476,6 +494,7 @@ export function mountDeck(p: Project, index: number, host: DeckHost, tour: boole
     ...(pipe ? [{ id: 'pipeline', label: 'Pipeline', time: 11, build: () => pipeline(pipe) }] : []),
     ...dives.map((c, i) => ({ id: `dive-${i}`, label: TAG[c.tag], time: 12, build: () => dive(c, i) })),
     { id: 'results', label: 'Results', time: 11, build: resultsSlide },
+    ...(p.poster ? [{ id: 'poster', label: 'Poster', time: 18, build: () => posterSlide(p.poster!) }] : []),
     { id: 'file', label: 'The file', time: 9, build: file },
   ];
 

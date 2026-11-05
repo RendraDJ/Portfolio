@@ -9,8 +9,8 @@
     <!-- Nothing shows until the site is built (main.ts adds .is-ready): before
          that the page is raw HTML, its pictures unstyled. -->
     <style>html{background:#efefec}html:not(.is-ready) body{visibility:hidden}</style>
-    <script type="module" crossorigin src="/Portfolio/assets/index-Cl_ELzQN.js"></script>
-    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-Ci0437Q8.css">
+    <script type="module" crossorigin src="/Portfolio/assets/index-CDI-YGDQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-D7B94eUf.css">
   </head>
   <body>
     <div id="viewport">
@@ -155,6 +155,8 @@
           <!-- The phone: a CSS-3D iPhone holding everything about the brand
                (Instagram, music, blueprints, messages, story). See brand/phone.ts. -->
           <div class="phone" data-view="lock">
+            <!-- a hint beside the locked phone: it is there to be pressed -->
+            <p class="phone__callout" aria-hidden="true">Tap the phone<svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg></p>
             <div class="phone__scaler">
               <div class="phone__body">
                 <div class="phone__edge" aria-hidden="true"></div>
@@ -197,7 +199,10 @@
                           <button class="np-next" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M18 12L7 6v12l11-6z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg></button>
                         </div>
                       </div>
-                      <button class="phone__unlock" type="button">Tap to open</button>
+                      <button class="phone__unlock" type="button">
+                        <svg class="phone__unlock-hand" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-.6a5 5 0 0 1-4.1-2.2L5.1 15.6a1.5 1.5 0 0 1 2.4-1.8L9 15.6M6.5 4.5L5 3M10.5 2.5V1M14.5 4.5L16 3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        Tap to open
+                      </button>
                     </div>
 
                     <!-- Home screen -->

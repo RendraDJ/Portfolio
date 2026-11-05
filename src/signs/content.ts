@@ -5,6 +5,7 @@
  * Edit freely: the panel that opens on click is built from these fields.
  */
 import { publicUrl } from '../url';
+import qtPoster from '../assets/experiences/qt-poster.webp';
 
 /** The object on the pole that stands for the experience (see build.ts). */
 export type SignKind = 'drone' | 'desk' | 'mailbox' | 'robot' | 'arm';
@@ -27,6 +28,8 @@ export interface Experience {
   note?: string;
   /** The report, as a file in public/ (omit when there is none). */
   report?: string;
+  /** The project's poster, as an image (omit when there is none). */
+  poster?: string;
 }
 
 export const experiences: readonly Experience[] = [
@@ -96,6 +99,7 @@ export const experiences: readonly Experience[] = [
     slug: 'first-contact',
     kind: 'robot',
     title: 'QT Robot — Physical Interaction',
+    poster: qtPoster,
     where: 'LIRMM, Montpellier — QT Robot',
     when: 'Nov 2024 — Jan 2025',
     role: 'Project',
